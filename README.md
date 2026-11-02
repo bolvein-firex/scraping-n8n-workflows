@@ -10,18 +10,18 @@ Runnable n8n workflows for the **Scraper Finder** channel. Each workflow calls a
 
 | # | Workflow | Platform | Object | Output |
 |---|---|---|---|---|
-| 1 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, phone, website, rating |
+| 1 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | records | name, phone, website, rating |
 | 2 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, baths |
 | 3 | [TikTok Hashtag Momentum & Top Creator Tracker](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | TikTok | trends | hashtag, posts, views, momentum |
 | 4 | [Amazon Multi-Domain Product Price & Detail Scraper](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | Amazon | products | title, price, coupon, rating |
-| 5 | [Google Maps Grid-Based Market Saturation Scanner](workflows/google-maps-grid-based-market-saturation-scanner.json) | Google Maps | competitors | Grid Point, rank, Business, rating |
-| 6 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | contact pages | domain, email, phone, source page |
-| 7 | [Shopify Store Catalog & Pricing Extractor](workflows/shopify-store-catalog-and-pricing-extractor.json) | Shopify | stores | title, price, compare-at, variant |
+| 5 | [Google Maps Grid-Based Market Saturation Scanner](workflows/google-maps-grid-based-market-saturation-scanner.json) | Google Maps | competitors | Grid Point, rank, business, rating |
+| 6 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | records | domain, email, phone, source page |
+| 7 | [Shopify Store Catalog & Pricing Extractor](workflows/shopify-store-catalog-and-pricing-extractor.json) | Shopify | records | title, price, compare-at, variant |
 | 8 | [Indeed Global Job Scraper with Company Salary Reports](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | Indeed | jobs | title, company, location, salary |
 | 9 | [Airbnb Listing Price & Location Finder](workflows/airbnb-listing-price-and-location-finder.json) | Airbnb | listings | name, price, rating, reviews |
-| 10 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | search trends | Term, Interest, Breakout, Related Query |
-| 11 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | conversations | Subreddit, title, Score, Author |
-| 12 | [New Jersey Business Registry Lookup & Name Checker](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | the state registry | business entities | entity name, status, formed date, agent |
+| 10 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | records | Term, Interest, Breakout, Related Query |
+| 11 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | records | Subreddit, title, score, author |
+| 12 | [New Jersey Business Registry Lookup & Name Checker](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | the state registry | records | entity name, status, formed date, agent |
 
 ## Setup
 
