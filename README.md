@@ -22,7 +22,7 @@ Runnable n8n workflows for the **Scraper Finder** channel. Each workflow calls a
 | 10 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | search trends | Term, Interest, Breakout, Related Query |
 | 11 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | conversations | score, author, title, Subreddit |
 | 12 | [New Jersey Business Registry Lookup & Name Checker](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | the state registry | business entities | entity name, agent, status, formed date |
-| 13 | [Amazon Customer Review & Rating Summary Scraper](workflows/amazon-customer-review-and-rating-summary-scraper.json) | Amazon | review data | author, rating, text, date |
+| 13 | [Amazon Customer Review & Rating Summary Scraper](workflows/amazon-customer-review-and-rating-summary-scraper.json) | Amazon | review data | author, rating, verified, date |
 
 ## Setup
 
