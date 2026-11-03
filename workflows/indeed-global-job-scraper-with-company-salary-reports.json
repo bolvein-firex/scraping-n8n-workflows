@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "ff23068e-209b-48a6-9bdf-6a606bdb5437",
+      "id": "e292ee86-badf-408e-8e0f-b1df9a74684c",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"searchQueries\": [\n    \"account executive\"\n  ],\n  \"location\": \"United States\",\n  \"maxItems\": 1000,\n  \"includeSalary\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "03a70e91-2462-434a-9308-7265e37d5b32",
+      "id": "5b217be5-4736-4a69-b662-3f0846cf5ebe",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "8a25edd9-eb0c-4246-8415-b5850c0afca6",
+      "id": "c35c7cb2-2da7-44f1-9140-04f6d1c2a992",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "4f1a116b-e19a-448e-9df2-355751e9037b",
+      "id": "a5fa9899-76f5-4318-b373-881a650e2254",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "1d112537-29ed-44f8-9e7b-8b35bc29d895",
+      "id": "071cd8b9-2e90-42be-916b-98fc523e2441",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "539785ac-d6fb-419e-99e4-0656510b8da8",
+      "id": "6de13860-a3f2-49a1-9c10-4eb787a767fe",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "cc7b5974-b20c-4574-a4e9-51f6920701f0",
+      "id": "755f7917-6e32-40cf-9536-93f678184bc4",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "2893341d-9d5d-41f9-a212-ed10b45c6ec0",
+  "versionId": "19bec5bc-6345-4f6e-8bd0-69261251c3c8",
   "description": "Pull jobs from Indeed with the Indeed Global Job Scraper with Company Salary Reports actor, normalize the rows, and dedupe before writing to a sheet."
 }

@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "a8c5ff23-aad4-4a41-a09e-f3f732dbb7ee",
+      "id": "da8b4347-9365-41e7-a35e-8c1408c2fa02",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"trendingHashtags\",\n  \"countries\": [\n    \"US\"\n  ],\n  \"periods\": [\n    7\n  ],\n  \"includeCreatorLeaders\": true,\n  \"maxItems\": 100\n};\n\nreturn [{ json: input }];"
       },
-      "id": "de0581ed-8bf7-4261-9a90-ede6fa796cda",
+      "id": "fa9ba1a6-98bf-469f-beb9-39197c169e76",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "5d87d958-71f4-4298-aaee-694ccf6e0b4d",
+      "id": "4806555a-d16a-4efe-aa44-26afa5dac0a0",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"hashtag\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "537fced0-8458-4391-920e-734e48687b67",
+      "id": "c2da7795-e393-4f34-a421-b7cfd5c0821d",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "2183f6cc-129b-4355-99ed-f515be356354",
+      "id": "19f73505-97c5-4cfc-a69f-f2b943d90b19",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "5a4332bb-5529-472e-aeac-2e98d59e7dc9",
+      "id": "0fcb198d-c909-4e39-8d6a-adbf22acb427",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "63b68e2c-172e-465d-ab28-382c81108f61",
+      "id": "858cb853-f521-4580-a71c-f19a16adf3ff",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "c61d2132-7677-4bf2-a2e6-28974350e7da",
+  "versionId": "fa2efd38-2f94-4069-aaf9-417d61d450dd",
   "description": "Pull trends from TikTok with the TikTok Hashtag Momentum & Top Creator Tracker actor, normalize the rows, and dedupe before writing to a sheet."
 }
