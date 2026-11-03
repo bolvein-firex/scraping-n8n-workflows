@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "ee62fff7-2123-4279-a47f-645beb42e922",
+      "id": "d5b40891-e3fc-4682-ab95-e20a093cfb77",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"terms\": [\n    \"ai agents\",\n    \"n8n workflows\"\n  ],\n  \"geo\": \"US\",\n  \"timeRange\": \"today 3-m\",\n  \"includeRelatedQueries\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "0d584ab8-2bd5-4fbe-b0c6-eb1a1a921356",
+      "id": "4760f584-514e-4e8d-9fe7-d2fff2520d06",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "c90ad2b2-925c-479a-b7b2-8cea7535bf6e",
+      "id": "33818e0c-b3eb-4157-a7fa-a771193ca12c",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"term\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/google-trends-interest-and-related-query-scraper\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "b1fb2a4b-0554-41d2-b89f-9d12e929c94d",
+      "id": "f61f4d2b-62fe-49a3-8d36-128cb8507c0d",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "07fa909b-de02-46a7-8735-f4186fe74503",
+      "id": "ff170263-d66f-4b23-b3de-7faa78b7ed8c",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "a636a7dd-a180-4ddd-b778-e47f0489c5d1",
+      "id": "d88a4b0e-d8d0-418f-9a95-dadd6ae79831",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "7dbe3af1-8daf-4287-931c-65f40b3c0ced",
+      "id": "0521d53a-f6c1-4729-885a-6900d0c38ac9",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "798cca0f-a547-4fc1-ab7a-1dab8cc1b0ba",
+  "versionId": "6cb71077-4152-483f-b967-05955c650e4c",
   "description": "Pull search trends from Google Trends with the Google Trends Interest & Related Query Scraper actor, normalize the rows, and dedupe before writing to a sheet."
 }
