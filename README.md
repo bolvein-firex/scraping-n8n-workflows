@@ -25,14 +25,15 @@ New public-data workflow every day. Free. No email. No course.
 | 3 | [New Jersey Business Registry Lookup & Name Checker](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | the state registry | business entities | entity name, agent, status, formed date |
 | 4 | [Shopify Store Catalog & Pricing Extractor](workflows/shopify-store-catalog-and-pricing-extractor.json) | Shopify | stores | title, price, stock, compare-at |
 | 5 | [TikTok Hashtag Momentum & Top Creator Tracker](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | TikTok | trends | hashtag, views, momentum, top creator |
-| 6 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, email, rating, phone |
-| 7 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, price cut |
-| 8 | [Amazon Multi-Domain Product Price & Detail Scraper](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | Amazon | products | title, price, rating, reviews |
-| 9 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | contact pages | domain, email, phone, status |
-| 10 | [Indeed Global Job Scraper with Company Salary Reports](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | Indeed | jobs | title, salary, company, location |
-| 11 | [Airbnb Listing Price & Location Finder](workflows/airbnb-listing-price-and-location-finder.json) | Airbnb | listings | name, price, rating, reviews |
-| 12 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | search trends | Term, Interest, Breakout, Related Query |
-| 13 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | conversations | score, author, title, Subreddit |
+| 6 | [US Walkability, Transit & Bike Score Extractor](workflows/us-walkability-transit-and-bike-score-extractor.json) | the public web | location scores | walk score, transit score, bike score, address |
+| 7 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, email, rating, phone |
+| 8 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, price cut |
+| 9 | [Amazon Multi-Domain Product Price & Detail Scraper](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | Amazon | products | title, price, rating, reviews |
+| 10 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | contact pages | domain, email, phone, status |
+| 11 | [Indeed Global Job Scraper with Company Salary Reports](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | Indeed | jobs | title, salary, company, location |
+| 12 | [Airbnb Listing Price & Location Finder](workflows/airbnb-listing-price-and-location-finder.json) | Airbnb | listings | name, price, rating, reviews |
+| 13 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | search trends | Term, Interest, Breakout, Related Query |
+| 14 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | conversations | score, author, title, Subreddit |
 
 ## Setup
 
