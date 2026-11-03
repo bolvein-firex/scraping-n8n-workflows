@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "e0d27ed3-cbe4-4320-af8c-2866a594d5c6",
+      "id": "c0b5586b-fb66-411e-8b32-69f6d02f0f7f",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"storeUrl\": \"https://example-store.com\",\n  \"includeVariants\": true,\n  \"includeSoldOut\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "405adf24-b386-42c0-bb32-a7180de72a88",
+      "id": "86113a9a-bcdb-4c83-a08a-d04850fb5d45",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "8d271499-94ab-4cc7-8342-18d0749acf9f",
+      "id": "131cb4ea-5115-4c7a-9761-a53aa078d572",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "de8b5f16-aeef-47df-9570-b54f166f4f7b",
+      "id": "6f614090-275b-484a-9565-969c6b3048fa",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "c11b73f8-4f07-468a-bd99-1d17ab7a39e4",
+      "id": "aa0d1a38-8230-4815-bcc9-dcab74d1d080",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "fb8be830-1e8c-4a3e-a074-bb23893aa913",
+      "id": "183e386b-71f2-4bf0-90e9-2a1c0619c3e4",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "404e3709-5a0e-4283-bd9e-a9680c76be2e",
+      "id": "75059e18-c8bf-4df5-86f7-e015c75f42c7",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "765de8f4-4dfa-4224-950e-474450ef71f8",
+  "versionId": "231faec5-bbfa-4218-9d81-1aac1700eb45",
   "description": "Pull stores from Shopify with the Shopify Store Catalog & Pricing Extractor actor, normalize the rows, and dedupe before writing to a sheet."
 }

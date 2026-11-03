@@ -20,9 +20,9 @@ New public-data workflow every day. Free. No email. No course.
 
 | # | Workflow | Platform | Object | Output |
 |---|---|---|---|---|
-| 1 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, email, rating, phone |
-| 2 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, days on market |
-| 3 | [TikTok Hashtag Momentum & Top Creator Tracker](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | TikTok | trends | hashtag, views, momentum, top creator |
+| 1 | [TikTok Hashtag Momentum & Top Creator Tracker](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | TikTok | trends | hashtag, views, momentum, top creator |
+| 2 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, email, rating, phone |
+| 3 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, price cut |
 | 4 | [Amazon Multi-Domain Product Price & Detail Scraper](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | Amazon | products | title, price, rating, reviews |
 | 5 | [Google Maps Grid-Based Market Saturation Scanner](workflows/google-maps-grid-based-market-saturation-scanner.json) | Google Maps | competitors | rating, reviews, Grid Point, rank |
 | 6 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | contact pages | domain, email, phone, status |

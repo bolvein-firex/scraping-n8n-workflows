@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "9c2bc5ac-c514-4c1d-9be2-e56d6bbce281",
+      "id": "8c4b8d30-295d-4ca7-88b7-365889bd9e10",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"searchQuery\": \"roofing\",\n  \"status\": \"Active\",\n  \"maxResults\": 500\n};\n\nreturn [{ json: input }];"
       },
-      "id": "1543a425-b70a-43ed-96fe-1814e20eaa5c",
+      "id": "8966a456-4785-4ea5-87b8-81e9a06d7b34",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "1435a295-6b20-4e3b-bb1f-5f74010359d9",
+      "id": "bc4633dc-4178-4da6-8282-95b70bcd6820",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/new-jersey-business-registry-lookup-and-name\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "8ce9aeba-f465-4771-a435-793dc77916f6",
+      "id": "3cd9ff40-d180-413f-88f1-049144f813c8",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "cf9c7f65-f886-43f1-a62c-236a6435283f",
+      "id": "21a01b4e-fb48-4f68-99d4-7529bbf41816",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "aa1aaa10-5049-4801-83f6-61c6c4237914",
+      "id": "f7390424-fc46-4b2a-9295-4db6b8d28bd1",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "a3257421-5d67-420d-9d3d-31c962661410",
+      "id": "52c9b195-5ac1-42e9-9d98-60ef00fbd2cd",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "382dbd22-c73d-448a-a81e-a3fd9456d0c9",
+  "versionId": "e327f581-813d-4b74-a577-28cc5396ced6",
   "description": "Pull business entities from the state registry with the New Jersey Business Registry Lookup & Name Checker actor, normalize the rows, and dedupe before writing to a sheet."
 }
