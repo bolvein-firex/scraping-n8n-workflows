@@ -2,9 +2,19 @@
 
 Runnable n8n workflows for the **Scraper Finder** channel. Each workflow calls a public Apify actor, normalizes the rows, dedupes, and hands you a clean export.
 
-- Actor catalog: https://bolvein-firex.github.io/scraper-finder-site/
+**Watch the 45-second breakdown:** https://www.youtube.com/@ScraperFinder
+
+New public-data workflow every day. Free. No email. No course.
+
 - Skills repo: https://github.com/bolvein-firex/scraping-skills
-- Channel: @scraperfinder
+- Channel: https://www.youtube.com/@ScraperFinder
+
+## Start here
+
+1. Watch the short on the channel: https://www.youtube.com/@ScraperFinder
+2. Pick the workflow for the job you need below.
+3. Import the JSON into n8n.
+4. Run it on your own Apify account.
 
 ## Workflows
 

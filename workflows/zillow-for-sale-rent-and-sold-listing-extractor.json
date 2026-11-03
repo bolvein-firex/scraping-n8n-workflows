@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "ecb650d0-e44a-447d-9ffe-465d3df11919",
+      "id": "1d34c1da-ec02-41a1-bdb2-88e2e6053fc3",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"BUY\",\n  \"search\": \"Austin, TX\",\n  \"maxItems\": 500,\n  \"scrapeDetails\": true,\n  \"daysOnZillow\": \"1\",\n  \"sortBy\": \"newest\"\n};\n\nreturn [{ json: input }];"
       },
-      "id": "abb01b5c-384c-4738-aeb6-ab1642d0be5a",
+      "id": "088ef692-fd74-4b7c-a95b-9e8fbbf936bd",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "7c315cbb-03e3-40f2-8d2f-10eebe2ca834",
+      "id": "fd35a8c4-9cd7-493e-95cf-2dc1f6e76eaf",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"address\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "a92746ba-2885-47ac-8439-1d9d0b8826db",
+      "id": "04aeac3a-2f9c-449f-9af6-c2f54ba2da14",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "4b03c93b-e0e2-4e02-bbc2-48b92008680e",
+      "id": "d416f752-e209-4c8f-afca-e9789c244e30",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "0eef10ea-1223-4c29-ae4c-8527c1ca5e45",
+      "id": "b539d480-de10-45c7-a9c2-eb8b6fc9475b",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "dc70fc5e-ae84-4f80-b8c9-56077eba97e0",
+      "id": "244de060-0d29-4130-90cf-ef3673f6ba02",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "106fd466-8975-4b8f-9971-172a41256004",
+  "versionId": "b63801eb-3416-44b2-9501-e0d82dbace7d",
   "description": "Pull listings from Zillow with the Zillow For-Sale, Rent & Sold Listing Extractor actor, normalize the rows, and dedupe before writing to a sheet."
 }

@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "5e4ae19c-1463-43c3-844e-9ef806b318d2",
+      "id": "5eafe5c4-d09e-4d56-9ed4-899bafe8c666",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"searchTerms\": [\n    \"wireless earbuds\"\n  ],\n  \"marketplace\": \"amazon.com\",\n  \"maxItems\": 500,\n  \"includeDetails\": true,\n  \"dealsOnly\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "d17a6ad1-8dab-4e6d-88cd-7d4c09df1139",
+      "id": "d503cac1-5725-49be-9c48-242627dd8fe4",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "d3f59910-c569-47cc-ae6b-e4a70a3b96f1",
+      "id": "6b31d152-0537-47e2-8af9-9f46f5cc6a24",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"title\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "d9c260bb-e0d7-40fb-8009-59baabd56807",
+      "id": "67eb34c1-2712-40b5-8237-b6dcd5ce4a20",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "d05ea708-4099-432f-93a2-0cbe5f955e97",
+      "id": "3ca2b6c6-96e6-4508-a0ff-527b23dd531f",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "584cde77-4e07-4a68-a052-43e80553008a",
+      "id": "8d406f3e-bd24-49c3-90ad-518cae451901",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "82862009-f765-4f4d-87d6-3d1d7f186394",
+      "id": "c50521c3-62ea-48ae-9cd1-9eb9147be6df",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "999fe42e-c31f-440c-87d9-b5310307a37b",
+  "versionId": "7e8bd93e-79dc-4867-a574-3e2afb93d661",
   "description": "Pull products from Amazon with the Amazon Multi-Domain Product Price & Detail Scraper actor, normalize the rows, and dedupe before writing to a sheet."
 }
