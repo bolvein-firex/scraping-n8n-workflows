@@ -1,8 +1,8 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 10 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 11 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**21 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
+**22 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
 
 ## Quick start
 
@@ -54,6 +54,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Greenhouse ATS job board | [Greenhouse ATS Job Board Lookup by Company](docs/greenhouse-ats-job-board-lookup-by-company.md) | `title`, `companySlug`, `companyName`, `location`, `departments` |
 | Indeed job scraper with salaries | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | `positionName`, `displayTitle`, `company`, `rating`, `salary` |
 | We Work Remotely job listings scraper | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | `title`, `company`, `category`, `salary`, `postedAt` |
+| Workday careers site job listings scraper | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | `title`, `tenant`, `location`, `postedOn` |
 
 ### Social media and trends
 
@@ -96,7 +97,8 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 18 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
 | 19 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
 | 20 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 21 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 21 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) |  |
+| 22 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
