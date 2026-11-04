@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "3ea130e3-79d0-44dd-8564-162d01b6898b",
+      "id": "f0e8e85a-097a-48fb-a61e-9e351d568a94",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"countryCode\": \"us\",\n  \"languageCode\": \"en\",\n  \"onSale\": false,\n  \"freeShipping\": false,\n  \"minRating\": \"0\",\n  \"maxResultsPerQuery\": 20,\n  \"includePriceHistory\": true,\n  \"includeProductDetails\": false\n};\n\nreturn [{ json: input }];"
       },
-      "id": "f1640db4-b7ed-449c-94bb-e40a97e9ee55",
+      "id": "be46567a-590f-44c9-a952-0a8626755086",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "e5ead5dd-88df-4ef5-bb45-46a1245baf0a",
+      "id": "202c6c73-52c1-44e5-8c1e-2ad6adb357f3",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "dd9a14b6-a23a-44d9-a435-48eadb5d4ff2",
+      "id": "3ab4fef8-8455-4687-aae0-77bdd7f488a9",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "3d64b1b4-4dae-4182-93e5-e230e913b98e",
+      "id": "20be02cc-1368-4025-a89e-3c58712f7fb7",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "1c3c17bf-a878-4f05-8d52-8e0be89462cd",
+      "id": "719a336e-fa46-4fbb-b001-92fa63f2ea00",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "20f60a27-38fb-412e-a2d2-8f519630279c",
+      "id": "b3605cf5-7653-4483-980c-72dae8e53c1f",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "b9c498dc-c1c5-4680-8161-3d82221123fd",
+  "versionId": "cfa10e71-a77c-4351-94a2-3a95ae1fbcfe",
   "description": "Pull products from Google Shopping with the Google Shopping Price Comparison & Deal Finder actor, normalize the rows, and dedupe before writing to a sheet."
 }

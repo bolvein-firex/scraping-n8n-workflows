@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "fb99672c-8977-4749-b256-69e2ad05a7c7",
+      "id": "3bee69c7-a516-49c7-ad17-24150f4fcdce",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"keywords\": [\n    \"wireless earbuds\"\n  ],\n  \"country\": \"amazon.com\",\n  \"maxReviews\": 100,\n  \"includeAggregates\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "d830fb55-ef70-4eef-9691-fb94a04deef4",
+      "id": "32980ee1-2452-4c8e-a4d8-c07e916a42d0",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "e619dfee-8961-4716-bd28-7dd9d27b609b",
+      "id": "579155de-a45f-40e6-9d15-f63025991c36",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/amazon-customer-review-and-rating-summary-scraper\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "89bf02a6-8da9-4fb7-8e1b-4bba1ed9281d",
+      "id": "143bc613-9bef-4eca-9eef-1d14dc490746",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "a00018cc-e7c7-43a8-b4da-91ad0d896f38",
+      "id": "817d8d86-4ffb-49dd-b559-61db4d9425c1",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "2f74c3b8-496e-4336-8a7d-a0771b18fe9b",
+      "id": "882df6d4-1c87-4c3a-a681-cc99694fa26f",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "f2ddab44-3ba2-4f33-b0fb-4f36ddefe344",
+      "id": "d8a45a78-0359-4c07-842b-12c53d9872da",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "385937f1-fe92-49c9-913b-98acbc9136ba",
+  "versionId": "a923dc8a-e244-4be8-b071-a6178efb1ff5",
   "description": "Pull review data from Amazon with the Amazon Customer Review & Rating Summary Scraper actor, normalize the rows, and dedupe before writing to a sheet."
 }
