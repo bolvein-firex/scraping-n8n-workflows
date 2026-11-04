@@ -198,5 +198,5 @@
   },
   "tags": [],
   "versionId": "ddc8a75d-58d3-4d3e-a1c9-8a2a0f941e7e",
-  "description": "Walk Score for a list of addresses: runs the US Walkability, Transit & Bike Score Extractor Apify Actor, returns address, locationType, walkScore, transitScore, bikeScore and more, then normalizes and dedupes the rows before an optional Google Sheets append."
+  "description": "Walk Score for a list of addresses: runs the US Walkability, Transit & Bike Score Extractor Apify Actor, returns address, city, walkScore, transitScore, bikeScore and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

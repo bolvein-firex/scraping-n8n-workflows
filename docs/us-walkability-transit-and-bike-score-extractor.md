@@ -1,6 +1,6 @@
 # US Walkability, Transit & Bike Score Extractor: free n8n workflow
 
-A free n8n workflow that runs the [US Walkability, Transit & Bike Score Extractor](https://apify.com/dataspryva/us-walkability-transit-and-bike-score-extractor) Apify Actor and returns `address`, `locationType`, `walkScore`, `transitScore`, `bikeScore` and more as clean, deduped rows for Google Sheets or your next node.
+A free n8n workflow that runs the [US Walkability, Transit & Bike Score Extractor](https://apify.com/dataspryva/us-walkability-transit-and-bike-score-extractor) Apify Actor and returns `address`, `city`, `walkScore`, `transitScore`, `bikeScore` and more as clean, deduped rows for Google Sheets or your next node.
 
 - Job: Walk Score for a list of addresses
 - Platform: Walk Score
