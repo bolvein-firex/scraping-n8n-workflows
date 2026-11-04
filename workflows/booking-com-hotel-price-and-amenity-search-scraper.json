@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "0a9816d5-1d97-49c7-b9d1-f3b6f3976e1e",
+      "id": "556aaddd-b80a-4da2-87de-f401a441e703",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"startUrls\": [],\n  \"adults\": 2,\n  \"rooms\": 1,\n  \"propertyType\": \"all\",\n  \"minReviewScore\": 0,\n  \"stars\": \"0\",\n  \"freeCancellation\": false,\n  \"breakfast\": false,\n  \"pool\": false,\n  \"currency\": \"USD\",\n  \"language\": \"en-us\",\n  \"maxItems\": 3,\n  \"includeRooms\": true,\n  \"includeFullAmenities\": false\n};\n\nreturn [{ json: input }];"
       },
-      "id": "f56a8090-25e9-465a-86ce-564e97067ec7",
+      "id": "14cb9512-c736-4610-817b-63879c9173b0",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "3eefe6b8-cb9a-477c-a38f-a39f0eb78571",
+      "id": "85b1f796-dc65-479a-ad78-645405ba3450",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/booking-com-hotel-price-and-amenity-search-scraper\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "1322bdc7-7d07-4e8a-899a-374e53de4329",
+      "id": "353f82af-3ceb-4776-aac5-d1257ee26832",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "499aa00a-4257-488d-be82-56874f260592",
+      "id": "c9713678-444d-4a54-b9a0-4d94139a2978",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "9a4ff645-d72a-4c1c-a955-c94777e59e76",
+      "id": "4faa08ce-a686-4993-9c7b-ab80b5ca9e3e",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "12622b1a-3b7e-475b-b041-fa5ac68e45b3",
+      "id": "c5529a25-ab0d-4cf5-9d60-bb62c39ba8c4",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "b603e35c-1a9e-4f2a-b9d9-94760c215381",
+  "versionId": "29d7ffde-f034-4226-bf19-aefc95861ef4",
   "description": "Pull products from Booking.com with the Booking.com Hotel Price & Amenity Search Scraper actor, normalize the rows, and dedupe before writing to a sheet."
 }

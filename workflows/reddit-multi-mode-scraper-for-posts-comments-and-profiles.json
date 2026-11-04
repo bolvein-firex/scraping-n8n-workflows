@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "a5666a41-555f-4f22-a191-7ad5f49a202c",
+      "id": "b7383bb5-cb16-4963-91ac-dadaa46f093d",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"subreddits\": [\n    \"smallbusiness\",\n    \"SaaS\"\n  ],\n  \"searchQuery\": \"lead generation\",\n  \"maxItems\": 1000,\n  \"includeComments\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "b2702dd1-115c-4c45-8eb8-ef2678001605",
+      "id": "c0d6451e-096c-4b71-b189-31c356d0eec1",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "bac9c634-b559-4530-80ad-c0bcdda05597",
+      "id": "4badddad-5f54-4cf3-a75a-ae5d84c760c0",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/reddit-multi-mode-scraper-for-posts-comments\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "385df5f2-22f8-4b02-b502-84e4542938db",
+      "id": "d7df08bf-b123-4a41-af55-7fea162b8e59",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "e90f936c-6aeb-44d1-9c21-6f566dcc90be",
+      "id": "c5f4e25d-69c9-4f2a-a270-b7ad2af951b3",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "8e30d11e-bb5a-4711-990d-01ab5ea5e11e",
+      "id": "8ed3fcf1-d67f-40e3-814a-4189c3ce4845",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "ff1d49ab-d2ef-4bd6-8f1d-da20440b1f5c",
+      "id": "e4c6d59c-987b-424c-9110-ff0f2709de38",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "e71486d4-d1f6-4569-8271-a208b2878555",
+  "versionId": "5affc491-137d-4409-a6df-5454837e0307",
   "description": "Pull conversations from Reddit with the Reddit Multi-Mode Scraper for Posts, Comments & Profiles actor, normalize the rows, and dedupe before writing to a sheet."
 }
