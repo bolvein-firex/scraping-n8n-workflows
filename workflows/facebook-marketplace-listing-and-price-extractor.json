@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "000f1a11-70f6-499e-89ed-a3669d62352d",
+      "id": "5b595941-b060-45b5-8d0c-045f424a1c69",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"auto\",\n  \"startUrls\": [],\n  \"searchQueries\": [],\n  \"country\": \"US\",\n  \"radiusKm\": 65,\n  \"category\": \"all\",\n  \"sortBy\": \"relevance\",\n  \"condition\": \"any\",\n  \"deliveryMethod\": \"all\",\n  \"availability\": \"all\",\n  \"exactMatch\": false,\n  \"maxItems\": 50,\n  \"maxItemsPerUrl\": 50,\n  \"maxPagesPerUrl\": 100,\n  \"scrapeMode\": \"fast\",\n  \"includeListingDetails\": false,\n  \"includeAllPhotos\": false,\n  \"rehostImages\": true,\n  \"deduplicateAcrossInputs\": true,\n  \"location\": \"New York, NY\"\n};\n\nreturn [{ json: input }];"
       },
-      "id": "973638ee-f31c-422a-b827-76e181eabe6e",
+      "id": "25b2a9bd-f0da-4e91-90f4-71fc96af5d17",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "fc10ce54-3848-4eb8-9d6a-a944f332bf2d",
+      "id": "4cfa590d-8a53-414c-8518-f14eecb19a27",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "06409162-fe70-4083-b76b-361f25502bd5",
+      "id": "88a103b2-6635-43ae-b4a1-8e50ea6120ac",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "b1bbb0b4-fdc5-46dc-a18a-376c9f2ea9a4",
+      "id": "a7cfa97e-4452-4c81-82f6-71d021d872b9",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "df545f50-d1b9-46af-b4bd-4c11f37a9313",
+      "id": "5b33d9c7-4215-47d1-8a9d-bc5fd52e6e0c",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "0a703b4b-b79e-43ce-a427-6fc00c1ac075",
+      "id": "42b184c3-899d-4e4a-afe1-3d1adccae2f9",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "6e896e75-7158-4727-82ad-5285ea7c0b17",
+  "versionId": "ddb202b5-e9d9-4185-84ec-947bed6d61af",
   "description": "Pull products from Facebook with the Facebook Marketplace Listing & Price Extractor actor, normalize the rows, and dedupe before writing to a sheet."
 }

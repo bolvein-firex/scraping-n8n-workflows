@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "b7c96e44-7b18-493d-a449-0c30d3a60f55",
+      "id": "a7ecfaaf-1d82-4b61-909d-b90913865c22",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"region\": \"US\",\n  \"language\": \"en_US\",\n  \"sortBy\": \"default\",\n  \"priceMin\": 0,\n  \"priceMax\": 0,\n  \"ratingMin\": 0,\n  \"freeShippingOnly\": false,\n  \"choiceOnly\": false,\n  \"fourStarPlus\": false,\n  \"includeSponsored\": true,\n  \"includeWelcomeGifts\": false,\n  \"maxItems\": 100,\n  \"maxPages\": 3,\n  \"includeReviews\": false,\n  \"maxReviewsPerProduct\": 20,\n  \"reviewFilter\": \"all\",\n  \"includeProductStats\": true,\n  \"searchQueries\": [\n    \"keyword\"\n  ]\n};\n\nreturn [{ json: input }];"
       },
-      "id": "9195325e-a41d-4f8f-8398-0d01aa3d4919",
+      "id": "6f515b01-eb54-409c-8952-a2d298ec8b01",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "f6d9867b-93e5-4136-91ac-f61d28de102c",
+      "id": "f918aea7-73b7-40a4-a9c0-94d7ad96e474",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/aliexpress-multi-region-search-store-and-review\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "070da016-c8a1-4eeb-af22-2740f1dda224",
+      "id": "27c4bbdd-f3a4-4978-b0ce-f0991be7cab3",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "dfee1354-64fc-414e-8460-23a6947f2825",
+      "id": "d0a97e52-ea69-4b74-9694-c2450cfb905b",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "556c55da-1414-49c5-bc1b-aee08d73ecb0",
+      "id": "bf1db5cd-93d1-4ea2-9f03-8e4589dc1f3c",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "c17388a3-b9ac-4d3f-bebd-0421b0a22472",
+      "id": "2e4e5362-e48d-401c-9d57-cbd8c36d943e",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "30a9dabe-f88c-46bb-a71d-e8e1ae1a0e94",
+  "versionId": "c4d94a95-dcdd-43f2-8a5c-243e7c1b663d",
   "description": "Pull review data from AliExpress with the AliExpress Multi-Region Search, Store & Review Scraper actor, normalize the rows, and dedupe before writing to a sheet."
 }
