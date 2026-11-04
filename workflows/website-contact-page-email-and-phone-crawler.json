@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "cffac101-7aff-45e8-a46f-b406d066e3a2",
+      "id": "ccc1bb08-5d24-4146-85a2-05c758b00a89",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"websites\": [\n    \"example.com\",\n    \"anotherbrand.com\"\n  ],\n  \"maxContactPages\": 3,\n  \"verifyMx\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "d14a4c26-babe-4d73-9875-477dfa39f045",
+      "id": "a693137b-213e-476a-8dc8-ec3cfed7a651",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "4830cf2b-edde-4d0e-960f-3365d01cc3f9",
+      "id": "617f03bb-45f6-4a11-b4ca-189ca8fb81b5",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"email\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "e687d698-233f-4e84-a5c0-89cce0108093",
+      "id": "a3ba83d8-6fcc-4b9b-9f25-1113e42b44cf",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "eddb988b-a3c9-4f17-b003-36a58417934a",
+      "id": "dec8e341-a49f-4725-925a-360a44ffbc6b",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "cbbc3766-197d-4811-961b-aa23a9867c16",
+      "id": "8314d291-af01-4b4d-983b-d258d42d948e",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "b4abf677-c113-45b5-9b4a-7c6e53028932",
+      "id": "602501ec-5e07-4ed3-b5e0-f4529c357800",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "9a9e398d-9dab-49ce-807a-28a178bb17bc",
+  "versionId": "41234739-f7a3-47d7-8eb7-78fddad48cf5",
   "description": "Pull contact pages from the web with the Website Contact Page Email & Phone Crawler actor, normalize the rows, and dedupe before writing to a sheet."
 }

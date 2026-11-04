@@ -1,0 +1,202 @@
+{
+  "name": "Facebook Marketplace Listing & Price Extractor - clean export",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "01315705-5606-4ad2-a943-2bdac1c9880c",
+      "name": "Daily trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"auto\",\n  \"startUrls\": [],\n  \"searchQueries\": [],\n  \"country\": \"US\",\n  \"radiusKm\": 65,\n  \"category\": \"all\",\n  \"sortBy\": \"relevance\",\n  \"condition\": \"any\",\n  \"deliveryMethod\": \"all\",\n  \"availability\": \"all\",\n  \"exactMatch\": false,\n  \"maxItems\": 50,\n  \"maxItemsPerUrl\": 50,\n  \"maxPagesPerUrl\": 100,\n  \"scrapeMode\": \"fast\",\n  \"includeListingDetails\": false,\n  \"includeAllPhotos\": false,\n  \"rehostImages\": true,\n  \"deduplicateAcrossInputs\": true,\n  \"location\": \"New York, NY\"\n};\n\nreturn [{ json: input }];"
+      },
+      "id": "2ab7ae2c-6277-4682-8366-30b36e3a4fb0",
+      "name": "Configure input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "notes": "Edit the input object for your city, keyword, or category."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/nimbryxo-studio~facebook-marketplace-listing-and-price-extractor/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "74f2f556-da3b-4909-a53b-244e2c538e28",
+      "name": "Run Scraper Finder actor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "notes": "Select the Apify API Token (Query Auth) credential."
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+      },
+      "id": "b1fa1714-5a74-4011-ac45-7a03a1dbefcf",
+      "name": "Normalize + dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "38b88f79-0cf0-4df0-99d6-fbea2a7ba48a",
+      "name": "Rows ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "3e54b6c1-d0ab-4397-a50d-183f396c6745",
+      "name": "Google Sheets (optional)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable this after adding your Google Sheets credential and sheet ID."
+    },
+    {
+      "parameters": {
+        "content": "## Scraper Finder workflow\n\n**Actor:** [Facebook Marketplace Listing & Price Extractor](https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/facebook-marketplace-listing-and-price-extractor.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor\n\n### Suggested input fields\n- `mode` (string)\n- `startUrls` (array)\n- `searchQueries` (array)\n- `location` (string)\n- `country` (string)\n- `latitude` (number)\n- `longitude` (number)\n- `radiusKm` (integer)\n- `category` (string)\n- `categoryId` (string)\n- `sortBy` (string)\n- `minPrice` (number)",
+        "height": 520,
+        "width": 520,
+        "color": 4
+      },
+      "id": "d4b73262-2aa9-47f5-acaa-0eb088741564",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -420
+      ]
+    }
+  ],
+  "connections": {
+    "Daily trigger": {
+      "main": [
+        [
+          {
+            "node": "Configure input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure input": {
+      "main": [
+        [
+          {
+            "node": "Run Scraper Finder actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Scraper Finder actor": {
+      "main": [
+        [
+          {
+            "node": "Normalize + dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + dedupe": {
+      "main": [
+        [
+          {
+            "node": "Rows ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows ready": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [],
+  "versionId": "546b669a-30b4-4424-883c-63cd90ffa6b1",
+  "description": "Pull market data from Facebook with the Facebook Marketplace Listing & Price Extractor actor, normalize the rows, and dedupe before writing to a sheet."
+}

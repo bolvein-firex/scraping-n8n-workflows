@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "4bee2b36-aa45-4e15-a464-5c03cc7a3836",
+      "id": "bd524558-ce88-44ca-9d6e-7b113194f24e",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"searchPlaces\",\n  \"searchQueries\": [\n    \"restaurants in New York, NY\"\n  ],\n  \"max_results\": 2000,\n  \"extractEmails\": true,\n  \"onlySaveResults\": \"onlyWithContacts\"\n};\n\nreturn [{ json: input }];"
       },
-      "id": "4d4e528f-ef29-4a25-8e8a-9ad9174aba1b",
+      "id": "8f34cf87-3a83-4c6a-9ef8-6958527fca93",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "e676b69a-f19b-4bb1-94fc-f5ce199e2fa0",
+      "id": "2e2aff11-f4b5-43b4-b866-667dd7195579",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"email\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/google-maps-business-lead-and-email-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "d6cf620d-164e-4a10-bc9c-f8c005c69524",
+      "id": "88c8b5cd-5692-4ccd-8b2c-07328fa3a498",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "a1ffc591-89b0-49e7-b48d-95b1b596640e",
+      "id": "515aa911-f50e-4d99-9213-29af890cf385",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "04a051d3-d6a2-4e0e-885b-504888ecc4e7",
+      "id": "d38e05a6-6c62-4972-a32c-cdcf3dcf8152",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "56bca23d-b7a3-4002-8afe-65d83a56be38",
+      "id": "ebdccafb-4921-46a8-99da-248a1b28d8ce",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "99db2a8c-4a56-4b47-ad8d-f48fd0dd6ea2",
+  "versionId": "7ff74dc2-4652-43b1-a070-cc85d6c6d8cb",
   "description": "Pull restaurants from Google Maps with the Google Maps Business Lead & Email Finder actor, normalize the rows, and dedupe before writing to a sheet."
 }
