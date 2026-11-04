@@ -35,23 +35,14 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "mode": "careerSite",
-  "startUrls": [
-    "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
-  ],
-  "region": "auto",
-  "locations": [],
-  "jobFamilies": [],
-  "remoteOnly": false,
-  "postedWithin": "any",
-  "scrapeDetails": true,
-  "includeJobFamily": true,
-  "maxItems": 50,
-  "proxyConfiguration": {
-    "useApifyProxy": false
-  }
+  "scrapeDetails": false,
+  "includeJobFamily": false,
+  "maxItems": 25,
+  "mode": "careerSite"
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 25, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -69,6 +60,8 @@ Columns from the Actor's dataset schema, build 1.1.1:
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** drops identical rows (this output has no stable row ID).
 
 ## Import
 

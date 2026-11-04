@@ -35,25 +35,16 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "keywords": [],
-  "categoryUrls": [],
-  "maxProductsToDiscover": 10,
-  "extendedHistory": true,
-  "mergeMarketplaces": [],
-  "includeAggregates": true,
-  "country": "amazon.com",
-  "maxReviews": 100,
-  "sortBy": "helpful",
-  "verifiedPurchasesOnly": false,
-  "filterKeywords": [],
-  "mediaReviewsOnly": false,
-  "includeImages": true,
-  "includeGdprSensitive": false,
   "productUrls": [
-    "https://www.amazon.com/dp/B0EXAMPLE"
-  ]
+    "https://www.amazon.com/dp/B09X7MPX8L"
+  ],
+  "country": "amazon.com",
+  "maxReviews": 30,
+  "includeAggregates": true
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxProductsToDiscover` = 10, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -92,6 +83,8 @@ The full dataset has 3 more fields; open the Actor's Output tab for all of them.
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `reviewId` (per record type when the Actor mixes them).
 
 ## Import
 

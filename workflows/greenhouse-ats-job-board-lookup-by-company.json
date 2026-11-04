@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"companyJobs\",\n  \"workplaceType\": \"any\",\n  \"employmentType\": \"any\",\n  \"onlyWithSalary\": false,\n  \"salaryCurrency\": \"any\",\n  \"sortBy\": \"board\",\n  \"content\": false,\n  \"descriptionFormat\": \"html\",\n  \"includeQuestions\": false,\n  \"maxItems\": 500,\n  \"maxJobsPerCompany\": 0,\n  \"verifyCompanies\": true,\n  \"searchQuery\": \"head of growth\"\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"companies\": [\n    \"airbnb\"\n  ],\n  \"maxItems\": 25,\n  \"mode\": \"companyJobs\",\n  \"searchQuery\": \"head of growth\"\n};\n\nreturn [{ json: input }];"
       },
       "id": "a4fbd084-68ca-4bde-ae87-02ebd3cd7b90",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"title\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/greenhouse-ats-job-board-lookup-by-company\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = null; // no stable id in this output: identical rows are dropped\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/dataspryva/greenhouse-ats-job-board-lookup-by-company\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "004cb4a4-1bdc-427a-a245-26b25dadeefd",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "7894e917-aa33-4430-a1b8-3ad9f8704ce4",
+  "versionId": "ab128194-780e-4a86-a7d1-4be11b2a511b",
   "description": "Greenhouse ATS job board: runs the Greenhouse ATS Job Board Lookup by Company Apify Actor, returns title, companySlug, companyName, location, departments and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

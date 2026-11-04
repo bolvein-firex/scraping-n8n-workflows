@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"region\": \"US\",\n  \"language\": \"en_US\",\n  \"sortBy\": \"default\",\n  \"priceMin\": 0,\n  \"priceMax\": 0,\n  \"ratingMin\": 0,\n  \"freeShippingOnly\": false,\n  \"choiceOnly\": false,\n  \"fourStarPlus\": false,\n  \"includeSponsored\": true,\n  \"includeWelcomeGifts\": false,\n  \"maxItems\": 100,\n  \"maxPages\": 3,\n  \"includeReviews\": false,\n  \"maxReviewsPerProduct\": 20,\n  \"reviewFilter\": \"all\",\n  \"includeProductStats\": true,\n  \"searchQueries\": [\n    \"keyword\"\n  ]\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"searchQueries\": [\n    \"phone case\"\n  ],\n  \"region\": \"US\",\n  \"maxItems\": 25,\n  \"maxPages\": 1\n};\n\nreturn [{ json: input }];"
       },
       "id": "4339ce80-d3fa-4796-a134-949c111493a0",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"productUrl\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/aliexpress-multi-region-search-store-and-review\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = \"productId\"; // a stable identity from the Actor output\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/vexaloom-labs/aliexpress-multi-region-search-store-and-review\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "682f4908-b2fa-4c3d-ae9d-a1f8d8f5f32b",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "ac5f12bc-0e47-4534-acaa-ce95784f6aa9",
+  "versionId": "c4c722e8-f9af-4a2c-aca2-6eb6b02b7691",
   "description": "AliExpress product search export: runs the AliExpress Multi-Region Search, Store & Review Scraper Apify Actor, returns title, salePrice, originalPrice, discountPercent, rating and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

@@ -39,14 +39,15 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "websites": [
-    "example.com",
-    "anotherbrand.com"
+  "urls": [
+    "https://apify.com",
+    "https://n8n.io"
   ],
-  "maxContactPages": 3,
-  "verifyMx": true
+  "maxPagesPerSite": 10
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). The run size follows the number of inputs you pass.
 
 ## Output fields
 
@@ -81,6 +82,8 @@ The full dataset has 5 more fields; open the Actor's Output tab for all of them.
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `websiteUrl` (per record type when the Actor mixes them).
 
 ## Import
 

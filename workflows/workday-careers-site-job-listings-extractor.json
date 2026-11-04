@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"careerSite\",\n  \"startUrls\": [\n    \"https://salesforce.wd12.myworkdayjobs.com/External_Career_Site\"\n  ],\n  \"region\": \"auto\",\n  \"locations\": [],\n  \"jobFamilies\": [],\n  \"remoteOnly\": false,\n  \"postedWithin\": \"any\",\n  \"scrapeDetails\": true,\n  \"includeJobFamily\": true,\n  \"maxItems\": 50,\n  \"proxyConfiguration\": {\n    \"useApifyProxy\": false\n  }\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"scrapeDetails\": false,\n  \"includeJobFamily\": false,\n  \"maxItems\": 25,\n  \"mode\": \"careerSite\"\n};\n\nreturn [{ json: input }];"
       },
       "id": "235e702c-2d6e-40d7-a07d-47369e3b7fb6",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"title\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/workday-careers-site-job-listings-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = null; // no stable id in this output: identical rows are dropped\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/nimbryxo-studio/workday-careers-site-job-listings-extractor\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "59bef72c-4c8b-4f12-a46e-c7c3216f4ffa",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "06c41b6b-146f-44e5-a72a-edb1f35e2bbc",
+  "versionId": "3a267535-9714-43ee-a93d-6e4336e94295",
   "description": "Workday careers site job listings scraper: runs the Workday Careers Site Job Listings Extractor Apify Actor, returns title, tenant, location, postedOn and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

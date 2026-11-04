@@ -39,13 +39,15 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "keyword": "coffee shop",
-  "location": "Denver, CO",
-  "gridSize": 7,
-  "radius": 5,
-  "maxResultsPerPoint": 20
+  "searchQuery": "coffee shops",
+  "locationName": "Denver, CO",
+  "radiusKm": 2,
+  "maxPlacesPerCell": 20,
+  "maxTotalResults": 50
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxTotalResults` = 50, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -72,6 +74,8 @@ The full dataset has 16 more fields; open the Actor's Output tab for all of them
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `placeId` (per record type when the Actor mixes them).
 
 ## Import
 

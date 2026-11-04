@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"countryCode\": \"us\",\n  \"languageCode\": \"en\",\n  \"onSale\": false,\n  \"freeShipping\": false,\n  \"minRating\": \"0\",\n  \"maxResultsPerQuery\": 20,\n  \"includePriceHistory\": true,\n  \"includeProductDetails\": false\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"queries\": [\n    \"wireless earbuds\"\n  ],\n  \"countryCode\": \"us\",\n  \"maxResultsPerQuery\": 25,\n  \"includePriceHistory\": false\n};\n\nreturn [{ json: input }];"
       },
       "id": "2c137a79-31a9-43fc-a2a1-21979f06f4df",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"productUrl\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = \"productId\"; // a stable identity from the Actor output\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "030ad8a9-2fd3-47ab-a54e-0d12a5dc95c8",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "0ccc179f-2f00-45e0-a2c5-9fd86349edbb",
+  "versionId": "0d07d785-05ef-45e7-a63d-9cce925048dc",
   "description": "Google Shopping price comparison: runs the Google Shopping Price Comparison & Deal Finder Apify Actor, returns title, price, merchant, rating, reviewCount and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"browse\",\n  \"categories\": [],\n  \"startUrls\": [],\n  \"employmentTypes\": [],\n  \"regions\": [],\n  \"countries\": [],\n  \"postedWithin\": \"any\",\n  \"requireSalary\": false,\n  \"includeDescription\": true,\n  \"cleanHtml\": true,\n  \"includeDetails\": false,\n  \"includeCompanyProfile\": true,\n  \"incremental\": false,\n  \"maxItems\": 200\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"categories\": [\n    \"remote-full-stack-programming-jobs\"\n  ],\n  \"includeCompanyProfile\": false,\n  \"maxItems\": 25,\n  \"mode\": \"browse\"\n};\n\nreturn [{ json: input }];"
       },
       "id": "1d38b8f6-fbe0-480e-a7cb-67e032bc9d8f",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/we-work-remotely-job-listings-and-salary-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = \"url\"; // a stable identity from the Actor output\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/dataspryva/we-work-remotely-job-listings-and-salary-extractor\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "8cdf3f1e-c0e2-49cc-a420-23ac9e0af291",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "f03bbd8b-45b4-4677-ac15-b246df876159",
+  "versionId": "032f8297-c72b-488a-ab05-03661f128557",
   "description": "We Work Remotely job listings scraper: runs the We Work Remotely Job Listings & Salary Extractor Apify Actor, returns title, company, category, salary, postedAt and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

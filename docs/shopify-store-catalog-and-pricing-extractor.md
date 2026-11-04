@@ -39,11 +39,19 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "storeUrl": "https://example-store.com",
-  "includeVariants": true,
-  "includeSoldOut": true
+  "mode": "catalog",
+  "storeUrls": [
+    "https://deathwishcoffee.com"
+  ],
+  "maxItems": 50,
+  "currency": "store",
+  "available": "any",
+  "includeDetails": false,
+  "flattenVariants": false
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 50, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -66,6 +74,8 @@ The full dataset has 33 more fields; open the Actor's Output tab for all of them
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `url` (per record type when the Actor mixes them).
 
 ## Import
 

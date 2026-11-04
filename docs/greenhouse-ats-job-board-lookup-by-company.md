@@ -35,21 +35,16 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
+  "companies": [
+    "airbnb"
+  ],
+  "maxItems": 25,
   "mode": "companyJobs",
-  "workplaceType": "any",
-  "employmentType": "any",
-  "onlyWithSalary": false,
-  "salaryCurrency": "any",
-  "sortBy": "board",
-  "content": false,
-  "descriptionFormat": "html",
-  "includeQuestions": false,
-  "maxItems": 500,
-  "maxJobsPerCompany": 0,
-  "verifyCompanies": true,
   "searchQuery": "head of growth"
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 25, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -71,6 +66,8 @@ Columns from the Actor's dataset schema, build 1.0.2:
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** drops identical rows (this output has no stable row ID).
 
 ## Import
 

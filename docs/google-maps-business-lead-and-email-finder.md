@@ -43,11 +43,13 @@ Starter input (edit it in **Configure input**):
   "searchQueries": [
     "restaurants in New York, NY"
   ],
-  "max_results": 2000,
+  "max_results": 20,
   "extractEmails": true,
   "onlySaveResults": "onlyWithContacts"
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `max_results` = 20, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -97,6 +99,8 @@ The full dataset has 3 more fields; open the Actor's Output tab for all of them.
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `placeId` (per record type when the Actor mixes them).
 
 ## Import
 

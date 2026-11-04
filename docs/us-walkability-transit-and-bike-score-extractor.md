@@ -33,16 +33,16 @@ Starter input (edit it in **Configure input**):
 ```json
 {
   "mode": "byCity",
-  "addresses": [],
   "cities": [
     "Seattle, WA"
   ],
-  "neighborhoods": [],
   "state": "WA",
   "includeNeighborhoods": true,
-  "maxItems": 50
+  "maxItems": 25
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 25, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -68,6 +68,8 @@ The full dataset has 1 more field; open the Actor's Output tab for all of them.
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `address` (per record type when the Actor mixes them).
 
 ## Import
 

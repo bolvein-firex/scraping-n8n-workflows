@@ -35,22 +35,16 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "mode": "browse",
-  "categories": [],
-  "startUrls": [],
-  "employmentTypes": [],
-  "regions": [],
-  "countries": [],
-  "postedWithin": "any",
-  "requireSalary": false,
-  "includeDescription": true,
-  "cleanHtml": true,
-  "includeDetails": false,
-  "includeCompanyProfile": true,
-  "incremental": false,
-  "maxItems": 200
+  "categories": [
+    "remote-full-stack-programming-jobs"
+  ],
+  "includeCompanyProfile": false,
+  "maxItems": 25,
+  "mode": "browse"
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 25, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -68,6 +62,8 @@ Columns from the Actor's dataset schema, build 1.3.1:
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `url` (per record type when the Actor mixes them).
 
 ## Import
 

@@ -40,22 +40,18 @@ Starter input (edit it in **Configure input**):
 ```json
 {
   "mode": "search",
-  "startUrls": [],
+  "destination": "Paris",
+  "checkIn": "2026-12-01",
+  "checkOut": "2026-12-03",
   "adults": 2,
   "rooms": 1,
-  "propertyType": "all",
-  "minReviewScore": 0,
-  "stars": "0",
-  "freeCancellation": false,
-  "breakfast": false,
-  "pool": false,
   "currency": "USD",
-  "language": "en-us",
-  "maxItems": 3,
-  "includeRooms": true,
-  "includeFullAmenities": false
+  "maxItems": 20,
+  "includeRooms": false
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 20, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -84,6 +80,8 @@ The full dataset has 30 more fields; open the Actor's Output tab for all of them
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `url` (per record type when the Actor mixes them).
 
 ## Import
 

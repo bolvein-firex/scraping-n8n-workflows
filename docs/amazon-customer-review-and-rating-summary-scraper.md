@@ -43,10 +43,13 @@ Starter input (edit it in **Configure input**):
     "wireless earbuds"
   ],
   "country": "amazon.com",
-  "maxReviews": 100,
+  "maxProductsToDiscover": 2,
+  "maxReviews": 20,
   "includeAggregates": true
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxProductsToDiscover` = 2, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -85,6 +88,8 @@ The full dataset has 3 more fields; open the Actor's Output tab for all of them.
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `reviewId` (per record type when the Actor mixes them).
 
 ## Import
 

@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"auto\",\n  \"startUrls\": [],\n  \"searchQueries\": [],\n  \"country\": \"US\",\n  \"radiusKm\": 65,\n  \"category\": \"all\",\n  \"sortBy\": \"relevance\",\n  \"condition\": \"any\",\n  \"deliveryMethod\": \"all\",\n  \"availability\": \"all\",\n  \"exactMatch\": false,\n  \"maxItems\": 50,\n  \"maxItemsPerUrl\": 50,\n  \"maxPagesPerUrl\": 100,\n  \"scrapeMode\": \"fast\",\n  \"includeListingDetails\": false,\n  \"includeAllPhotos\": false,\n  \"rehostImages\": true,\n  \"deduplicateAcrossInputs\": true,\n  \"location\": \"New York, NY\"\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"searchQueries\": [\n    \"office chair\"\n  ],\n  \"location\": \"Austin, Texas\",\n  \"maxItems\": 25\n};\n\nreturn [{ json: input }];"
       },
       "id": "a3014a31-c3a5-4701-a3bc-2e13689dbc47",
       "name": "Configure input",
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"listingUrl\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = \"listingUrl\"; // a stable identity from the Actor output\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
       },
       "id": "70a144ac-3d76-48e1-a0db-8b9a295109d9",
       "name": "Normalize + dedupe",
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "cdde5522-797a-4a2c-a9dc-c602ed8893b2",
+  "versionId": "160af966-ea2c-4a57-ad1b-1088cd29ec34",
   "description": "Facebook Marketplace scraper: runs the Facebook Marketplace Listing & Price Extractor Apify Actor, returns title, price, city, state, locationText and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

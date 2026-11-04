@@ -35,28 +35,16 @@ Starter input (edit it in **Configure input**):
 
 ```json
 {
-  "mode": "auto",
-  "startUrls": [],
-  "searchQueries": [],
-  "country": "US",
-  "radiusKm": 65,
-  "category": "all",
-  "sortBy": "relevance",
-  "condition": "any",
-  "deliveryMethod": "all",
-  "availability": "all",
-  "exactMatch": false,
-  "maxItems": 50,
-  "maxItemsPerUrl": 50,
-  "maxPagesPerUrl": 100,
-  "scrapeMode": "fast",
-  "includeListingDetails": false,
-  "includeAllPhotos": false,
-  "rehostImages": true,
-  "deduplicateAcrossInputs": true,
-  "location": "New York, NY"
+  "mode": "search",
+  "searchQueries": [
+    "office chair"
+  ],
+  "location": "Austin, Texas",
+  "maxItems": 25
 }
 ```
+
+The input passes the Actor's input schema (checked at every publish). First run: `maxItems` = 25, small enough for the 300-second sync wait; raise it once the rows look right.
 
 ## Output fields
 
@@ -80,6 +68,8 @@ The full dataset has 65 more fields; open the Actor's Output tab for all of them
 ## Nodes
 
 Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+**Normalize + dedupe** keeps one row per `listingUrl` (per record type when the Actor mixes them).
 
 ## Import
 
