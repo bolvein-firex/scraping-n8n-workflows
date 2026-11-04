@@ -1,0 +1,202 @@
+{
+  "name": "Amazon Review Aggregates & Extended History Scraper - clean export",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "13a0c8b4-f5cd-4289-a73f-3f73f0d739a0",
+      "name": "Daily trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"keywords\": [],\n  \"categoryUrls\": [],\n  \"maxProductsToDiscover\": 10,\n  \"extendedHistory\": true,\n  \"mergeMarketplaces\": [],\n  \"includeAggregates\": true,\n  \"country\": \"amazon.com\",\n  \"maxReviews\": 100,\n  \"sortBy\": \"helpful\",\n  \"verifiedPurchasesOnly\": false,\n  \"filterKeywords\": [],\n  \"mediaReviewsOnly\": false,\n  \"includeImages\": true,\n  \"includeGdprSensitive\": false,\n  \"productUrls\": [\n    \"https://www.amazon.com/dp/B0EXAMPLE\"\n  ]\n};\n\nreturn [{ json: input }];"
+      },
+      "id": "ccf3f07c-f046-4041-ac29-26ac06fa6fef",
+      "name": "Configure input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "notes": "Edit the input object for your city, keyword, or category."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/dataspryva~amazon-review-aggregates-and-extended-history/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "b7bb5c5e-f29b-44e7-91af-7b2e1bc2441e",
+      "name": "Run Scraper Finder actor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "notes": "Select the Apify API Token (Query Auth) credential."
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/amazon-review-aggregates-and-extended-history\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+      },
+      "id": "f7c70fa1-f3f9-4150-9568-a50ac54aaa78",
+      "name": "Normalize + dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b9290707-fdd2-4a29-9bff-8bd2daaaca6d",
+      "name": "Rows ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "34d3d2fe-37cc-4331-924f-417d5c08ade5",
+      "name": "Google Sheets (optional)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable this after adding your Google Sheets credential and sheet ID."
+    },
+    {
+      "parameters": {
+        "content": "## Scraper Finder workflow\n\n**Actor:** [Amazon Review Aggregates & Extended History Scraper](https://apify.com/dataspryva/amazon-review-aggregates-and-extended-history)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/amazon-review-aggregates-and-extended-history-scraper.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/dataspryva/amazon-review-aggregates-and-extended-history\n\n### Suggested input fields\n- `productUrls` (array)\n- `keywords` (array)\n- `categoryUrls` (array)\n- `maxProductsToDiscover` (integer)\n- `extendedHistory` (boolean)\n- `mergeMarketplaces` (array)\n- `includeAggregates` (boolean)\n- `country` (string)\n- `maxReviews` (integer)\n- `sortBy` (string)\n- `filterByStar` (string)\n- `verifiedPurchasesOnly` (boolean)",
+        "height": 520,
+        "width": 520,
+        "color": 4
+      },
+      "id": "3c43d093-8164-4fc1-9304-e283b089f1e9",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -420
+      ]
+    }
+  ],
+  "connections": {
+    "Daily trigger": {
+      "main": [
+        [
+          {
+            "node": "Configure input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure input": {
+      "main": [
+        [
+          {
+            "node": "Run Scraper Finder actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Scraper Finder actor": {
+      "main": [
+        [
+          {
+            "node": "Normalize + dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + dedupe": {
+      "main": [
+        [
+          {
+            "node": "Rows ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows ready": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [],
+  "versionId": "aa6edeaa-0b26-40b9-acde-850a7e99d9a1",
+  "description": "Pull review data from Amazon with the Amazon Review Aggregates & Extended History Scraper actor, normalize the rows, and dedupe before writing to a sheet."
+}

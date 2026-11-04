@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "f70495b5-1847-4c0c-a086-71bd2c85e296",
+      "id": "551aea8b-3232-49d4-af30-74540407f0ee",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"byCity\",\n  \"addresses\": [],\n  \"cities\": [\n    \"Seattle, WA\"\n  ],\n  \"neighborhoods\": [],\n  \"state\": \"WA\",\n  \"includeNeighborhoods\": true,\n  \"maxItems\": 50\n};\n\nreturn [{ json: input }];"
       },
-      "id": "889a79cd-90e3-4c69-9fb4-0163425e8a3a",
+      "id": "fe2200cc-72b4-415d-b859-6eea7cbeaf31",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "547d771c-c712-4e89-a94c-436be6aff82a",
+      "id": "8ffa6872-a409-437a-bdb7-3c62f063c510",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/us-walkability-transit-and-bike-score-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "58c263a7-7960-44b0-9afe-47e02b891241",
+      "id": "a3177c2d-af74-44f8-8399-0180fcbf79f8",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "6def6bd9-06a4-4116-a0d2-008c51ae492f",
+      "id": "1f459412-cf35-4192-bd49-9d392942ce3f",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "e8e2d394-bbf1-420d-9e4c-8e49dd2068c6",
+      "id": "db1b8f6d-7a84-45c0-9694-55e2ccf0086d",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "2e3e5be9-be1c-43b0-af1a-3fc6728a7b3d",
+      "id": "758661ad-4c9e-4e86-a8b8-185c5a41eb5f",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "c7c2819c-7d86-4ed5-a024-41f4ad3eab2f",
+  "versionId": "80948550-086a-4102-b5ff-5f9f60373898",
   "description": "Pull location scores from the public web with the US Walkability, Transit & Bike Score Extractor actor, normalize the rows, and dedupe before writing to a sheet."
 }
