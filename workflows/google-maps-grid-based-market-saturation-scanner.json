@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "acb4ab4a-ffc1-4f00-b0e5-83f741049875",
+      "id": "eae1f9eb-b3b7-4dcc-8cd5-014f3f7daa08",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"keyword\": \"coffee shop\",\n  \"location\": \"Denver, CO\",\n  \"gridSize\": 7,\n  \"radius\": 5,\n  \"maxResultsPerPoint\": 20\n};\n\nreturn [{ json: input }];"
       },
-      "id": "9e2a8cb2-7ed6-4817-bc07-a7705003b546",
+      "id": "5ee7b23f-149d-4d58-9bb2-61ad46926fde",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "bee7a2ea-784e-419a-89b4-d006b0f9fda0",
+      "id": "0ff02050-920b-4c03-955a-de43349ef6c6",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"gridPoint\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "314e8fe1-0559-4cf4-9c9d-61420ae3fc3d",
+      "id": "5409d627-2d14-4ee4-9505-5a2da245ea57",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "8ff4f8f9-1481-4ff5-b56b-7466ce4f5bb6",
+      "id": "ac2b0b2e-7fa3-4730-ac71-cd95b91adef8",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "edab120d-e2ae-4fff-b714-1ff75f134e64",
+      "id": "a3ce9a92-0760-4aad-ac00-b98c33df02fd",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "232e08a3-2a03-4cea-9b78-ab4f9102c9b9",
+      "id": "24f82a98-6a54-4f85-996e-8df3d0d09fdb",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "d587f5ee-39b7-4c56-8db7-6da2e76bfcb5",
+  "versionId": "abe922c4-7135-4d46-bb6a-2a0616c8a367",
   "description": "Pull competitors from Google Maps with the Google Maps Grid-Based Market Saturation Scanner actor, normalize the rows, and dedupe before writing to a sheet."
 }

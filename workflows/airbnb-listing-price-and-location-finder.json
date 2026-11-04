@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "f8cd78c7-4df5-4c1c-a062-4919bb276f35",
+      "id": "b09c6262-fd96-4984-944f-3c1625d3371b",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -27,7 +27,7 @@
       "parameters": {
         "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"location\": \"Miami, FL\",\n  \"checkIn\": \"2026-11-14\",\n  \"checkOut\": \"2026-11-16\",\n  \"maxListings\": 500\n};\n\nreturn [{ json: input }];"
       },
-      "id": "abb07e26-0945-4650-9105-dc4c9a11200e",
+      "id": "509f7f39-332e-4cfb-9f72-c9ac8fe28bf4",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
           "timeout": 300000
         }
       },
-      "id": "d0f73349-2b2e-44fb-ad26-1bfeb14f0834",
+      "id": "a28fe6b3-9cda-4053-8ebc-29437ada0897",
       "name": "Run Scraper Finder actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -64,7 +64,7 @@
       "parameters": {
         "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"name\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/airbnb-listing-price-and-location-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "411771be-5805-4d7a-8c71-b5ea28988ce8",
+      "id": "67ff743d-df36-4125-9423-adbf656b74dd",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "8c783931-4081-4208-b55e-b37aee0b99cb",
+      "id": "5aed6e01-5945-46c8-ae16-59e8cd242c2e",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "3d072b28-f46c-4b6e-b576-66c1f924793e",
+      "id": "8483252f-9ce9-4ab1-b2ca-0fa838c50daa",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -121,7 +121,7 @@
         "width": 520,
         "color": 4
       },
-      "id": "b066fb97-4dea-4665-86ad-da7ab05761a3",
+      "id": "3307ee43-cc8a-465c-a7b3-ace4be99a465",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "b07b4d4b-bd0f-4735-a16c-63cbe28e7da2",
+  "versionId": "058237ec-9f4c-4d25-abaa-ebade64515e0",
   "description": "Pull listings from Airbnb with the Airbnb Listing Price & Location Finder actor, normalize the rows, and dedupe before writing to a sheet."
 }
