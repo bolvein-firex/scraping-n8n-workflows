@@ -2,7 +2,7 @@
 
 A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 12 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**24 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
+**25 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
 
 ## Quick start
 
@@ -65,6 +65,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Reddit posts and comments scraper | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](docs/reddit-multi-mode-scraper-for-posts-comments-and-profiles.md) | `subreddit_prefixed`, `title`, `author`, `score`, `commentCount` |
 | TikTok trending hashtags | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | `rankIndex`, `hashtagName`, `publishCnt`, `vv` |
 | TikTok keyword search scraper | [TikTok Keyword Search & Discovery Scraper](docs/tiktok-keyword-search-and-discovery-scraper.md) | `rank`, `caption`, `playCount`, `likeCount`, `commentCount` |
+| TikTok verified mention | [TikTok Verified Mention Tracker](docs/tiktok-verified-mention-tracker.md) | `targetUsername`, `postUrl`, `author.followerCount`, `playCount`, `likeCount` |
 
 ### Reviews
 
@@ -98,11 +99,12 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 17 | [startup.jobs Category & Keyword Job Scraper](docs/startup-jobs-category-and-keyword-job-scraper.md) | startup.jobs | `title`, `company`, `location`, `salary`, `postedAt` | [JSON](workflows/startup-jobs-category-and-keyword-job-scraper.json) |  |
 | 18 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
 | 19 | [TikTok Keyword Search & Discovery Scraper](docs/tiktok-keyword-search-and-discovery-scraper.md) | TikTok | `rank`, `caption`, `playCount`, `likeCount`, `commentCount` | [JSON](workflows/tiktok-keyword-search-and-discovery-scraper.json) |  |
-| 20 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
-| 21 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
-| 22 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 23 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) |  |
-| 24 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 20 | [TikTok Verified Mention Tracker](docs/tiktok-verified-mention-tracker.md) | TikTok | `targetUsername`, `postUrl`, `author.followerCount`, `playCount`, `likeCount` | [JSON](workflows/tiktok-verified-mention-tracker.json) |  |
+| 21 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
+| 22 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
+| 23 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 24 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) |  |
+| 25 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
