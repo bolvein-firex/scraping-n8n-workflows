@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "f83df5cd-6c74-47c0-bbcc-7d4b7c5b7b04",
+      "id": "e378bfcd-cc5c-4a1c-a846-432f31525a00",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"searchQueries\": [\n    \"account executive\"\n  ],\n  \"location\": \"United States\",\n  \"maxItems\": 1000,\n  \"includeSalary\": true\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"searchQueries\": [\n    \"account executive\"\n  ],\n  \"location\": \"United States\",\n  \"maxItems\": 1000,\n  \"includeSalary\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "4c91d852-6c72-4c3d-8f72-f0af5b9ec2a7",
+      "id": "02228924-bffb-44e8-ac10-881a3f416138",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "700b41b2-6d82-41c3-9000-ad3bbad5de44",
-      "name": "Run Scraper Finder actor",
+      "id": "7f822102-888b-4f72-af2f-1815ea17ae7f",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "a8402e4d-78ed-4499-b150-3b91da397e4d",
+      "id": "3a0bc861-fed6-4c9f-ad93-f1cb57ab900e",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "7fa0f565-bbe6-4be7-8159-c28951d86f3a",
+      "id": "523a013c-b7a7-46d2-a138-3705da9056e8",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "18ae5615-307d-4fcd-92a8-0036a8b66309",
+      "id": "e1ad9d90-dc6f-45de-aed7-e29075cc4675",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Indeed Global Job Scraper with Company Salary Reports](https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/indeed-global-job-scraper-with-company-salary-reports.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary\n\n### Suggested input fields\n- `position` (string)\n- `location` (string)\n- `company` (string)\n- `locationShards` (array)\n- `country` (string)\n- `maxItemsPerSearch` (integer)\n- `maxItems` (integer)\n- `shardByDate` (boolean)\n- `jobType` (string)\n- `workplaceType` (string)\n- `datePosted` (string)\n- `experienceLevel` (string)",
-        "height": 520,
-        "width": 520,
+        "content": "## Indeed Global Job Scraper with Company Salary Reports\n\n**Actor:** [Indeed Global Job Scraper with Company Salary Reports](https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/indeed-global-job-scraper-with-company-salary-reports.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `position` (string)\n- `location` (string)\n- `company` (string)\n- `locationShards` (array)\n- `country` (string)\n- `maxItemsPerSearch` (integer)\n- `maxItems` (integer)\n- `shardByDate` (boolean)\n- `jobType` (string)\n- `workplaceType` (string)\n- `datePosted` (string)\n- `experienceLevel` (string)\n\n### Output fields\n- `positionName` (Job title)\n- `displayTitle` (Display title)\n- `company` (Company)\n- `rating` (Rating)\n- `location` (Location)\n- `salary` (Salary)\n- `jobType` (Job type)\n- `remoteWorkType` (Workplace)\n- `postedAt` (Posted)\n- `isRepost` (Repost)\n- `isSponsored` (Sponsored)\n- `easyApply` (Easy apply)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "d425d2d8-1b30-429e-8ff1-57e33191324b",
+      "id": "d4d2f09c-93c5-400d-a4c4-52ad524bb78e",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "8c00bdb9-39bd-413f-af5c-422949055b6e",
-  "description": "Pull jobs from Indeed with the Indeed Global Job Scraper with Company Salary Reports actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "5c7ebd4b-90d0-4c95-a598-0aa8da9fc4c6",
+  "description": "Indeed job scraper with salaries: runs the Indeed Global Job Scraper with Company Salary Reports Apify Actor, returns positionName, displayTitle, company, rating, salary and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

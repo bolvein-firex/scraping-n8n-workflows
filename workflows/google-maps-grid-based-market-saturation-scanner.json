@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "eae1f9eb-b3b7-4dcc-8cd5-014f3f7daa08",
+      "id": "0330b788-b40e-44f7-a45e-5e3f0faa363e",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"keyword\": \"coffee shop\",\n  \"location\": \"Denver, CO\",\n  \"gridSize\": 7,\n  \"radius\": 5,\n  \"maxResultsPerPoint\": 20\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"keyword\": \"coffee shop\",\n  \"location\": \"Denver, CO\",\n  \"gridSize\": 7,\n  \"radius\": 5,\n  \"maxResultsPerPoint\": 20\n};\n\nreturn [{ json: input }];"
       },
-      "id": "5ee7b23f-149d-4d58-9bb2-61ad46926fde",
+      "id": "cea235d2-aa17-4995-a044-6fa97c1a2957",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "0ff02050-920b-4c03-955a-de43349ef6c6",
-      "name": "Run Scraper Finder actor",
+      "id": "40cdad2d-7885-4080-a5a5-c7b4202401b1",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"gridPoint\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"placeId\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "5409d627-2d14-4ee4-9505-5a2da245ea57",
+      "id": "5c72a3d2-21bc-4ed6-a6b9-1ceee815fcab",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "ac2b0b2e-7fa3-4730-ac71-cd95b91adef8",
+      "id": "7573a615-405a-4f08-a850-7c0844fd442a",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "a3ce9a92-0760-4aad-ac00-b98c33df02fd",
+      "id": "baac87ba-b2cf-4119-aa7a-dbeabe21d2bb",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Google Maps Grid-Based Market Saturation Scanner](https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/google-maps-grid-based-market-saturation-scanner.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner\n\n### Suggested input fields\n- `searchQuery` (string, required)\n- `locationName` (string)\n- `boundingBox` (object)\n- `circleCenter` (object)\n- `radiusKm` (number)\n- `customGeolocation` (object)\n- `zoomLevel` (integer)\n- `maxPlacesPerCell` (integer)\n- `maxPagesPerCell` (integer)\n- `maxTotalResults` (integer)\n- `deduplicateResults` (boolean)\n- `enrichDetails` (boolean)",
-        "height": 520,
-        "width": 520,
+        "content": "## Google Maps Grid-Based Market Saturation Scanner\n\n**Actor:** [Google Maps Grid-Based Market Saturation Scanner](https://apify.com/dataspryva/google-maps-grid-based-market-saturation-scanner)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/google-maps-grid-based-market-saturation-scanner.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `searchQuery` (string, required)\n- `locationName` (string)\n- `boundingBox` (object)\n- `circleCenter` (object)\n- `radiusKm` (number)\n- `customGeolocation` (object)\n- `zoomLevel` (integer)\n- `maxPlacesPerCell` (integer)\n- `maxPagesPerCell` (integer)\n- `maxTotalResults` (integer)\n- `deduplicateResults` (boolean)\n- `enrichDetails` (boolean)\n\n### Output fields\n- `name` (Name)\n- `categoryName` (Category)\n- `totalScore` (Rating)\n- `reviewsCount` (Reviews)\n- `address` (Address)\n- `phone` (Phone)\n- `website` (Website)\n- `placeId` (Place Id)\n- `featureId` (Feature Id)\n- `kgmid` (Kgmid)\n- `googleMapsUrl` (Google Maps Url)\n- `location` (Location)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "24f82a98-6a54-4f85-996e-8df3d0d09fdb",
+      "id": "cd5988e2-4fdd-4ddc-a82f-450aa8313d7f",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "abe922c4-7135-4d46-bb6a-2a0616c8a367",
-  "description": "Pull competitors from Google Maps with the Google Maps Grid-Based Market Saturation Scanner actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "e1f01784-ac0c-4964-a0f1-ed387847dbbe",
+  "description": "Google Maps search beyond 120 results: runs the Google Maps Grid-Based Market Saturation Scanner Apify Actor, returns name, categoryName, totalScore, reviewsCount, phone and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

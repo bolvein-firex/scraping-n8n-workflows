@@ -1,78 +1,141 @@
 # Scraping n8n Workflows
 
-Runnable n8n workflows for the **Scraper Finder** channel. Each workflow calls a public Apify actor, normalizes the rows, dedupes, and hands you a clean export.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 8 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**Watch the 45-second breakdown:** https://www.youtube.com/@ScraperFinder
+**19 workflows** · 14 with a YouTube Short · last updated 2026-11-04 · MIT licence
 
-New public-data workflow every day. Free. No email. No course.
+## Quick start
 
-- Skills repo: https://github.com/bolvein-firex/scraping-skills
-- Channel: https://www.youtube.com/@ScraperFinder
+1. Pick a workflow below and copy its raw JSON link, for example `https://raw.githubusercontent.com/bolvein-firex/scraping-n8n-workflows/main/workflows/aliexpress-multi-region-search-store-and-review-scraper.json`.
+2. In n8n, open a new workflow, then **⋯ → Import from URL** (or **Import from file** with the downloaded JSON).
+3. Create a **Query Auth** credential: name `token`, value your Apify API token ([where to find it](https://console.apify.com/settings/integrations)). Select it in the **Run Apify Actor** node.
+4. Edit **Configure input** (city, keyword, URLs, limit) and click **Execute workflow**. The rows appear in **Rows ready**.
+5. Optional: enable **Google Sheets (optional)**, pick your sheet, and keep the daily trigger on for a scheduled refresh.
 
-## Start here
+## Find a workflow by job
 
-1. Watch the short on the channel: https://www.youtube.com/@ScraperFinder
-2. Pick the workflow for the job you need below.
-3. Import the JSON into n8n.
-4. Run it on your own Apify account.
+### Lead generation
 
-## Workflows
+| Job | Workflow | Returns |
+|---|---|---|
+| Google Maps leads with emails | [Google Maps Business Lead & Email Finder](docs/google-maps-business-lead-and-email-finder.md) | `name`, `googleBusinessCategories`, `phoneNumber`, `email`, `reviewScore` |
+| Google Maps search beyond 120 results | [Google Maps Grid-Based Market Saturation Scanner](docs/google-maps-grid-based-market-saturation-scanner.md) | `name`, `categoryName`, `totalScore`, `reviewsCount`, `phone` |
+| New Jersey business entity search | [New Jersey Business Registry Lookup & Name Checker](docs/new-jersey-business-registry-lookup-and-name-checker.md) | `businessName`, `entityTypeAbbr`, `entityTypeFull`, `city`, `incorporatedDate` |
+| Find emails and phone numbers from a list of websites | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` |
 
-| # | Workflow | Platform | Object | Output |
-|---|---|---|---|---|
-| 1 | [AliExpress Multi-Region Search, Store & Review Scraper](workflows/aliexpress-multi-region-search-store-and-review-scraper.json) | AliExpress | review data | author, business, rating, text |
-| 2 | [Amazon Customer Review & Rating Summary Scraper](workflows/amazon-customer-review-and-rating-summary-scraper.json) | Amazon | review data | author, rating, text, verified |
-| 3 | [Amazon Review Aggregates & Extended History Scraper](workflows/amazon-review-aggregates-and-extended-history-scraper.json) | Amazon | review data | author, business, rating, text |
-| 4 | [Booking.com Hotel Price & Amenity Search Scraper](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) | Booking.com | products | title, price, rating, reviews |
-| 5 | [Facebook Marketplace Listing & Price Extractor](workflows/facebook-marketplace-listing-and-price-extractor.json) | Facebook | products | symbol, change, market cap, price |
-| 6 | [Google Maps Grid-Based Market Saturation Scanner](workflows/google-maps-grid-based-market-saturation-scanner.json) | Google Maps | competitors | business, rating, reviews, Grid Point |
-| 7 | [Google Shopping Price Comparison & Deal Finder](workflows/google-shopping-price-comparison-and-deal-finder.json) | Google Shopping | products | title, price, rating, reviews |
-| 8 | [New Jersey Business Registry Lookup & Name Checker](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | the state registry | business entities | entity name, agent, status, formed date |
-| 9 | [Shopify Store Catalog & Pricing Extractor](workflows/shopify-store-catalog-and-pricing-extractor.json) | Shopify | stores | title, price, stock, compare-at |
-| 10 | [TikTok Hashtag Momentum & Top Creator Tracker](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | TikTok | trends | hashtag, views, momentum, top creator |
-| 11 | [US Walkability, Transit & Bike Score Extractor](workflows/us-walkability-transit-and-bike-score-extractor.json) | the public web | location scores | walk score, transit score, bike score, address |
-| 12 | [Google Maps Business Lead & Email Finder](workflows/google-maps-business-lead-and-email-finder.json) | Google Maps | restaurants | name, email, rating, phone |
-| 13 | [Zillow For-Sale, Rent & Sold Listing Extractor](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | Zillow | listings | address, price, beds, price cut |
-| 14 | [Amazon Multi-Domain Product Price & Detail Scraper](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | Amazon | products | title, price, rating, reviews |
-| 15 | [Website Contact Page Email & Phone Crawler](workflows/website-contact-page-email-and-phone-crawler.json) | the web | contact pages | domain, email, phone, status |
-| 16 | [Indeed Global Job Scraper with Company Salary Reports](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | Indeed | jobs | title, salary, company, location |
-| 17 | [Airbnb Listing Price & Location Finder](workflows/airbnb-listing-price-and-location-finder.json) | Airbnb | listings | name, price, rating, reviews |
-| 18 | [Google Trends Interest & Related Query Scraper](workflows/google-trends-interest-and-related-query-scraper.json) | Google Trends | search trends | Term, Interest, Breakout, Related Query |
-| 19 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | Reddit | conversations | score, author, title, Subreddit |
+### E-commerce and price tracking
 
-## Setup
+| Job | Workflow | Returns |
+|---|---|---|
+| AliExpress product search export | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` |
+| Amazon price tracking | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | `title`, `asin`, `price`, `stars`, `reviewsCount` |
+| Facebook Marketplace scraper | [Facebook Marketplace Listing & Price Extractor](docs/facebook-marketplace-listing-and-price-extractor.md) | `title`, `price`, `city`, `state`, `locationText` |
+| Google Shopping price comparison | [Google Shopping Price Comparison & Deal Finder](docs/google-shopping-price-comparison-and-deal-finder.md) | `title`, `price`, `merchant`, `rating`, `reviewCount` |
+| Scrape a Shopify store's products and prices | [Shopify Store Catalog & Pricing Extractor](docs/shopify-store-catalog-and-pricing-extractor.md) | `title`, `price`, `compareAtPrice`, `available`, `vendor` |
 
-1. Create an Apify account and copy an API token from https://console.apify.com/account#/integrations.
-2. In n8n, create a **Query Auth** credential:
-   - Name: `Apify API Token`
-   - Query parameter name: `token`
-   - Value: your token
-3. Import a workflow JSON file.
-4. Open **Run Scraper Finder actor** and select the credential.
-5. Edit **Configure input** for your city, keyword, or category.
-6. Click **Execute workflow**.
-7. Optional: enable **Google Sheets** and set your sheet.
+### Real estate
 
-## Why these workflows
+| Job | Workflow | Returns |
+|---|---|---|
+| Walk Score for a list of addresses | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | `address`, `locationType`, `walkScore`, `transitScore`, `bikeScore` |
+| Zillow for-sale, rental and sold listings | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | `address`, `price`, `soldPrice`, `beds`, `baths` |
 
-- No org token. You run the actor on your own Apify account.
-- No custom scraper to maintain.
-- Rows are normalized and deduped before they reach your sheet.
-- Each workflow is tied to a short video and a public actor page.
+### Travel and short-term rentals
 
-## Structure
+| Job | Workflow | Returns |
+|---|---|---|
+| Airbnb price scraper | [Airbnb Listing Price & Location Finder](docs/airbnb-listing-price-and-location-finder.md) | `name`, `nightlyPrice`, `totalPrice`, `rating`, `reviewCount` |
+| Booking.com hotel prices for your dates | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` |
 
-```
-workflows/
-  <actor-slug>.json
-docs/
-  setup-apify.md
-  import.md
-```
+### Jobs and salaries
+
+| Job | Workflow | Returns |
+|---|---|---|
+| Indeed job scraper with salaries | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | `positionName`, `displayTitle`, `company`, `rating`, `salary` |
+
+### Social media and trends
+
+| Job | Workflow | Returns |
+|---|---|---|
+| Export Google Trends data | [Google Trends Interest & Related Query Scraper](docs/google-trends-interest-and-related-query-scraper.md) | `searchTerms`, `title`, `geoName`, `averageInterest`, `growthPercent` |
+| Reddit posts and comments scraper | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](docs/reddit-multi-mode-scraper-for-posts-comments-and-profiles.md) | `subreddit_prefixed`, `title`, `author`, `score`, `commentCount` |
+| TikTok trending hashtags | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | `rankIndex`, `hashtagName`, `publishCnt`, `vv` |
+
+### Reviews
+
+| Job | Workflow | Returns |
+|---|---|---|
+| Amazon review scraper | [Amazon Customer Review & Rating Summary Scraper](docs/amazon-customer-review-and-rating-summary-scraper.md) | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` |
+| Amazon reviews across marketplaces | [Amazon Review Aggregates & Extended History Scraper](docs/amazon-review-aggregates-and-extended-history-scraper.md) | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` |
+
+## All workflows
+
+Output fields are the Actor's own column names, read from its dataset schema at publish time.
+
+| # | Workflow | Platform | Output fields | File | Short |
+|---|---|---|---|---|---|
+| 1 | [Airbnb Listing Price & Location Finder](docs/airbnb-listing-price-and-location-finder.md) | Airbnb | `name`, `nightlyPrice`, `totalPrice`, `rating`, `reviewCount` | [JSON](workflows/airbnb-listing-price-and-location-finder.json) | [Watch](https://www.youtube.com/shorts/aVEDRMB3vsU) |
+| 2 | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | AliExpress | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` | [JSON](workflows/aliexpress-multi-region-search-store-and-review-scraper.json) |  |
+| 3 | [Amazon Customer Review & Rating Summary Scraper](docs/amazon-customer-review-and-rating-summary-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-customer-review-and-rating-summary-scraper.json) | [Watch](https://www.youtube.com/shorts/WhVOks5q4MU) |
+| 4 | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | Amazon | `title`, `asin`, `price`, `stars`, `reviewsCount` | [JSON](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | [Watch](https://www.youtube.com/shorts/SqsDoB0jyD8) |
+| 5 | [Amazon Review Aggregates & Extended History Scraper](docs/amazon-review-aggregates-and-extended-history-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-review-aggregates-and-extended-history-scraper.json) |  |
+| 6 | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | Booking.com | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` | [JSON](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) |  |
+| 7 | [Facebook Marketplace Listing & Price Extractor](docs/facebook-marketplace-listing-and-price-extractor.md) | Facebook Marketplace | `title`, `price`, `city`, `state`, `locationText` | [JSON](workflows/facebook-marketplace-listing-and-price-extractor.json) |  |
+| 8 | [Google Maps Business Lead & Email Finder](docs/google-maps-business-lead-and-email-finder.md) | Google Maps | `name`, `googleBusinessCategories`, `phoneNumber`, `email`, `reviewScore` | [JSON](workflows/google-maps-business-lead-and-email-finder.json) | [Watch](https://www.youtube.com/shorts/ofD2844kDPQ) |
+| 9 | [Google Maps Grid-Based Market Saturation Scanner](docs/google-maps-grid-based-market-saturation-scanner.md) | Google Maps | `name`, `categoryName`, `totalScore`, `reviewsCount`, `phone` | [JSON](workflows/google-maps-grid-based-market-saturation-scanner.json) | [Watch](https://www.youtube.com/shorts/uom3-Fy_xFk) |
+| 10 | [Google Shopping Price Comparison & Deal Finder](docs/google-shopping-price-comparison-and-deal-finder.md) | Google Shopping | `title`, `price`, `merchant`, `rating`, `reviewCount` | [JSON](workflows/google-shopping-price-comparison-and-deal-finder.json) |  |
+| 11 | [Google Trends Interest & Related Query Scraper](docs/google-trends-interest-and-related-query-scraper.md) | Google Trends | `searchTerms`, `title`, `geoName`, `averageInterest`, `growthPercent` | [JSON](workflows/google-trends-interest-and-related-query-scraper.json) | [Watch](https://www.youtube.com/shorts/gDZBpA25UB8) |
+| 12 | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | Indeed | `positionName`, `displayTitle`, `company`, `rating`, `salary` | [JSON](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | [Watch](https://www.youtube.com/shorts/33f3pNEO6Oc) |
+| 13 | [New Jersey Business Registry Lookup & Name Checker](docs/new-jersey-business-registry-lookup-and-name-checker.md) | NJ business registry | `businessName`, `entityTypeAbbr`, `entityTypeFull`, `city`, `incorporatedDate` | [JSON](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | [Watch](https://www.youtube.com/shorts/tGV77V4rMqk) |
+| 14 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](docs/reddit-multi-mode-scraper-for-posts-comments-and-profiles.md) | Reddit | `subreddit_prefixed`, `title`, `author`, `score`, `commentCount` | [JSON](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | [Watch](https://www.youtube.com/shorts/3TmxkUNaB0U) |
+| 15 | [Shopify Store Catalog & Pricing Extractor](docs/shopify-store-catalog-and-pricing-extractor.md) | Shopify | `title`, `price`, `compareAtPrice`, `available`, `vendor` | [JSON](workflows/shopify-store-catalog-and-pricing-extractor.json) | [Watch](https://www.youtube.com/shorts/398NV7q-K6w) |
+| 16 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
+| 17 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `locationType`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
+| 18 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 19 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+
+## FAQ
+
+### Are these n8n workflows free?
+Yes. The workflow files are MIT-licensed. Each one calls a public Apify Actor on your own Apify account, so the only cost is that Actor's usage.
+
+### Do I need an Apify account?
+Yes. The **Run Apify Actor** node sends your Apify API token as a Query Auth credential. Apify's free plan includes a monthly usage credit, which is enough for small test runs. No token is stored in the JSON files.
+
+### How much does a run cost?
+It depends on the Actor's pricing (per result, per event or per compute unit) and on how many rows you ask for. Each workflow page links its Actor; the Actor's Pricing tab shows the current price. Start with a small limit in **Configure input**.
+
+### Can I export the rows to Google Sheets or CSV?
+Yes. Every workflow ends in a disabled **Google Sheets** node set to append rows with automatic column mapping; enable it after adding your Google credential and sheet ID. For CSV, add n8n's **Convert to File** node after **Rows ready**.
+
+### How do I import a workflow into n8n?
+Use **Import from URL** with the raw GitHub link of the JSON file, or download the file and use **Import from file**. Both are in the workflow editor's **⋯** menu. Then select your Apify credential in **Run Apify Actor**.
+
+### Does it work on n8n Cloud and self-hosted n8n?
+Yes. The workflows only use core nodes (Schedule Trigger, Code, HTTP Request, No Operation, Google Sheets), which ship with both.
+
+### How long can a run take?
+The **Run Apify Actor** node calls `run-sync-get-dataset-items`, which waits up to 300 seconds for the run and returns the rows. For larger jobs, start the run with `/runs` and read its dataset when it finishes.
+
+### What data do these workflows collect?
+Only public pages: no logins, cookies or private accounts. Check the target site's terms and your local law before running at scale.
+
+## How every workflow is built
+
+Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe → Rows ready → Google Sheets (optional, disabled)
+
+- **Configure input** holds the Actor input as a plain object; the Actor's input schema is listed on each workflow page.
+- **Normalize + dedupe** trims strings, drops empty values, adds `_source` and `_scrapedAt`, and removes duplicate rows on the most stable key (email, domain, URL or ID).
+
+## Related
+
+- Agent skills (SKILL.md) for the same Actors: https://github.com/bolvein-firex/scraping-skills
+- Short video breakdowns: https://www.youtube.com/@ScraperFinder
+- Setup notes: [docs/setup-apify.md](docs/setup-apify.md), [docs/import.md](docs/import.md)
 
 ## Guardrails
 
-Public data only. Do not use these workflows for private, login-protected, or paywalled data. Respect robots.txt, site terms, and local law.
+Public data only. Do not use these workflows for private, login-protected or paywalled data. Respect robots.txt, site terms and local law.
 
 ## License
 

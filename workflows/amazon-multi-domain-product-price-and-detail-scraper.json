@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "1156899a-0239-4dfb-ae16-ace5dd788a48",
+      "id": "e4288393-769b-4cbf-a5d6-e3efd57375fa",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"searchTerms\": [\n    \"wireless earbuds\"\n  ],\n  \"marketplace\": \"amazon.com\",\n  \"maxItems\": 500,\n  \"includeDetails\": true,\n  \"dealsOnly\": true\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"searchTerms\": [\n    \"wireless earbuds\"\n  ],\n  \"marketplace\": \"amazon.com\",\n  \"maxItems\": 500,\n  \"includeDetails\": true,\n  \"dealsOnly\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "1acfc8f8-e66d-4585-b947-18821160e12e",
+      "id": "a7ade1e0-7651-41a6-a528-7b1640c53200",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "9bd9f74f-e8cf-4cb4-8dcb-c1b0567bafd7",
-      "name": "Run Scraper Finder actor",
+      "id": "b886933a-a4fe-44ff-a84c-31a421fe895d",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"title\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "56e7023e-be06-432c-8c55-8d1e64ebf73b",
+      "id": "f62e5f08-d068-49ac-a108-d5df32fc79fe",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "88cbed30-ea23-4894-bf68-89bdb59b0a30",
+      "id": "9266caf6-6582-4430-a569-a58cb3045bdf",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "c53ae5c9-5566-4a34-8dd2-02bd534c1310",
+      "id": "3d8fba14-8d96-47b0-a2ef-8155296e7b9c",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Amazon Multi-Domain Product Price & Detail Scraper](https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/amazon-multi-domain-product-price-and-detail-scraper.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail\n\n### Suggested input fields\n- `productUrls` (array)\n- `asins` (array)\n- `searchTerms` (array)\n- `searchUrls` (array)\n- `bestsellerUrls` (array)\n- `marketplace` (string)\n- `domains` (array)\n- `language` (string)\n- `currency` (string)\n- `deliveryCountry` (string)\n- `postalCode` (string)\n- `minPrice` (number)",
-        "height": 520,
-        "width": 520,
+        "content": "## Amazon Multi-Domain Product Price & Detail Scraper\n\n**Actor:** [Amazon Multi-Domain Product Price & Detail Scraper](https://apify.com/nimbryxo-studio/amazon-multi-domain-product-price-and-detail)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/amazon-multi-domain-product-price-and-detail-scraper.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `productUrls` (array)\n- `asins` (array)\n- `searchTerms` (array)\n- `searchUrls` (array)\n- `bestsellerUrls` (array)\n- `marketplace` (string)\n- `domains` (array)\n- `language` (string)\n- `currency` (string)\n- `deliveryCountry` (string)\n- `postalCode` (string)\n- `minPrice` (number)\n\n### Output fields\n- `title` (Product Title)\n- `asin` (ASIN)\n- `price` (Price)\n- `stars` (Rating)\n- `reviewsCount` (Reviews)\n- `inStock` (In Stock)\n- `brand` (Brand)\n- `url` (URL)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "feb580b3-4a25-4cc5-9004-91d84209b201",
+      "id": "b954eb1e-0b0a-49d6-a7bb-a6304c747134",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "47aaf507-670c-4860-a2ee-ff9895d57902",
-  "description": "Pull products from Amazon with the Amazon Multi-Domain Product Price & Detail Scraper actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "7e772d13-b6fa-4ad9-aedc-97cbed5696f1",
+  "description": "Amazon price tracking: runs the Amazon Multi-Domain Product Price & Detail Scraper Apify Actor, returns title, asin, price, stars, reviewsCount and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

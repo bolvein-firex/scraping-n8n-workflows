@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "a6025f69-3f17-4c7b-9068-0f9d22647d30",
+      "id": "85bbd0c1-244f-4a44-a486-af37052c8ddc",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"websites\": [\n    \"example.com\",\n    \"anotherbrand.com\"\n  ],\n  \"maxContactPages\": 3,\n  \"verifyMx\": true\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"websites\": [\n    \"example.com\",\n    \"anotherbrand.com\"\n  ],\n  \"maxContactPages\": 3,\n  \"verifyMx\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "48b63567-0eee-4aaa-876f-e401a08056fd",
+      "id": "96a22a1c-83c4-4df6-ab63-f6732298c659",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "bf7eebb1-71e8-4f6c-bab8-f0a9bf682dec",
-      "name": "Run Scraper Finder actor",
+      "id": "2a97cc9c-2052-408c-ad7f-fc6b642a2a1b",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"email\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"primaryEmail\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "42d306af-f0a6-4449-86b1-64d05c698862",
+      "id": "33b4b490-0725-4be3-a905-fc43fce654c0",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "576687d5-9371-4b95-9ccb-da5f5d561f78",
+      "id": "b19c780a-92c1-4fc6-acb7-53c283dc8996",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "57ce0ff6-1084-40e1-ab6f-b052e85e817f",
+      "id": "9f78941a-01d7-46f7-a71d-5c500c32e06a",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Website Contact Page Email & Phone Crawler](https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/website-contact-page-email-and-phone-crawler.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler\n\n### Suggested input fields\n- `urls` (array, required)\n- `maxPagesPerSite` (integer)\n- `maxConcurrency` (integer)\n- `maxSitesConcurrency` (integer)\n- `requestTimeoutSecs` (integer)\n- `defaultCountry` (string)\n- `useProxy` (boolean)\n- `smartPrioritise` (boolean)\n- `respectRobotsTxt` (boolean)\n- `useSitemap` (boolean)\n- `renderFallback` (boolean)\n- `onlyWithContacts` (boolean)",
-        "height": 520,
-        "width": 520,
+        "content": "## Website Contact Page Email & Phone Crawler\n\n**Actor:** [Website Contact Page Email & Phone Crawler](https://apify.com/nimbryxo-studio/website-contact-page-email-and-phone-crawler)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/website-contact-page-email-and-phone-crawler.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `urls` (array, required)\n- `maxPagesPerSite` (integer)\n- `maxConcurrency` (integer)\n- `maxSitesConcurrency` (integer)\n- `requestTimeoutSecs` (integer)\n- `defaultCountry` (string)\n- `useProxy` (boolean)\n- `smartPrioritise` (boolean)\n- `respectRobotsTxt` (boolean)\n- `useSitemap` (boolean)\n- `renderFallback` (boolean)\n- `onlyWithContacts` (boolean)\n\n### Output fields\n- `websiteUrl` (Website Url)\n- `status` (Status)\n- `companyName` (Company Name)\n- `emails` (Emails)\n- `primaryEmail` (Primary Email)\n- `roleEmails` (Role Emails)\n- `namedEmails` (Named Emails)\n- `emailDetails` (Email Details)\n- `phones` (Phones)\n- `primaryPhone` (Primary Phone)\n- `phoneDetails` (Phone Details)\n- `socialLinks` (Social Links)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "d389545a-7827-47ac-9211-42e95f99167a",
+      "id": "a252e4eb-6c97-4f38-ac82-ca27b71cc4bc",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "c04f8ddf-3053-4667-b2da-2eea3010482c",
-  "description": "Pull contact pages from the web with the Website Contact Page Email & Phone Crawler actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "21d44c90-f5db-4184-aaf9-256719cffcf4",
+  "description": "Find emails and phone numbers from a list of websites: runs the Website Contact Page Email & Phone Crawler Apify Actor, returns websiteUrl, status, emails, primaryEmail, phones and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

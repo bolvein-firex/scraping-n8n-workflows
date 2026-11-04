@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "a466470c-f967-4e9d-97e3-3a1c660d3224",
+      "id": "f14a287f-9efe-48c6-a3e1-5071ba85eb71",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"trendingHashtags\",\n  \"countries\": [\n    \"US\"\n  ],\n  \"periods\": [\n    7\n  ],\n  \"includeCreatorLeaders\": true,\n  \"maxItems\": 100\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"trendingHashtags\",\n  \"countries\": [\n    \"US\"\n  ],\n  \"periods\": [\n    7\n  ],\n  \"includeCreatorLeaders\": true,\n  \"maxItems\": 100\n};\n\nreturn [{ json: input }];"
       },
-      "id": "f37e6bbf-9624-430c-a8d0-39e1bb9c3111",
+      "id": "2153ad71-f59c-4b30-a100-bee0e1b1a119",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "43b7fd2a-e1af-49bd-b998-56276605e690",
-      "name": "Run Scraper Finder actor",
+      "id": "85562818-5490-43d4-a216-a4bdc4d1234e",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"hashtag\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"hashtagName\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "4c0e0ae5-52ed-4e76-896e-9f26a90a08e7",
+      "id": "db20a063-40ac-4c19-a838-740a08e4b2d1",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "de4c7f74-8f2e-46c3-ad6a-cd13047e5da0",
+      "id": "148eb503-1f31-44fb-a102-789403ed1a37",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "0bdeb135-5688-4b67-a53b-14997aa821fc",
+      "id": "7e4c5428-4712-419e-aaca-1e00d10a8cf4",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [TikTok Hashtag Momentum & Top Creator Tracker](https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker\n\n### Suggested input fields\n- `mode` (string)\n- `countries` (array)\n- `periods` (array)\n- `includeOverallRanking` (boolean)\n- `scanAllIndustries` (boolean)\n- `industries` (array)\n- `includeCreatorLeaders` (boolean)\n- `minHashtagAppearances` (integer)\n- `videoCountries` (array)\n- `videoPeriods` (array)\n- `videoSortBy` (string)\n- `videoOrganicOnly` (boolean)",
-        "height": 520,
-        "width": 520,
+        "content": "## TikTok Hashtag Momentum & Top Creator Tracker\n\n**Actor:** [TikTok Hashtag Momentum & Top Creator Tracker](https://apify.com/dataspryva/tiktok-hashtag-momentum-and-top-creator-tracker)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/tiktok-hashtag-momentum-and-top-creator-tracker.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string)\n- `countries` (array)\n- `periods` (array)\n- `includeOverallRanking` (boolean)\n- `scanAllIndustries` (boolean)\n- `industries` (array)\n- `includeCreatorLeaders` (boolean)\n- `minHashtagAppearances` (integer)\n- `videoCountries` (array)\n- `videoPeriods` (array)\n- `videoSortBy` (string)\n- `videoOrganicOnly` (boolean)\n\n### Output fields\n- `rankIndex` (Rank)\n- `hashtagName` (Hashtag)\n- `publishCnt` (Post Count)\n- `vv` (Video Views)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "dc066360-5ee2-4c71-acae-d5daf43333d9",
+      "id": "609f0eb9-d693-4f95-a501-137f8647cfd9",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "fb762fc8-17e8-4441-90fd-739ba9368577",
-  "description": "Pull trends from TikTok with the TikTok Hashtag Momentum & Top Creator Tracker actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "c5e653bf-3b0b-4887-a008-9eaeaa0367bb",
+  "description": "TikTok trending hashtags: runs the TikTok Hashtag Momentum & Top Creator Tracker Apify Actor, returns rankIndex, hashtagName, publishCnt, vv and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

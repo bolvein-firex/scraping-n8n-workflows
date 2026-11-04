@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "95f30d39-1301-4a4b-8e47-619dfa4b71c5",
+      "id": "635bcde2-b478-479d-a634-c5dd8c413823",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"storeUrl\": \"https://example-store.com\",\n  \"includeVariants\": true,\n  \"includeSoldOut\": true\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"storeUrl\": \"https://example-store.com\",\n  \"includeVariants\": true,\n  \"includeSoldOut\": true\n};\n\nreturn [{ json: input }];"
       },
-      "id": "1d2d9640-093a-4941-bf20-aac61cc9bfdb",
+      "id": "bb4b8d56-a919-4898-aafd-289758e8fe03",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "bb532766-0878-40ca-b6f2-91a987b4833c",
-      "name": "Run Scraper Finder actor",
+      "id": "7d88e4f4-f2db-4065-a876-4c2f3ee648e6",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"productUrl\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "655e89cd-0753-4c17-9320-04782c17c097",
+      "id": "da78bfd8-372c-491c-a67c-01c800e3478f",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "53e0e4b5-9924-4aca-b158-73e0f8ee4a45",
+      "id": "4bdfb7d9-69dc-4812-a93e-2e91ca9c1e51",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "d557567b-7a93-4e66-8133-5f9966e67986",
+      "id": "d9d36c27-9e91-4fab-ae44-f4af86e2795f",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Shopify Store Catalog & Pricing Extractor](https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/shopify-store-catalog-and-pricing-extractor.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor\n\n### Suggested input fields\n- `mode` (string, required)\n- `storeUrls` (array)\n- `startUrls` (array)\n- `collectionHandles` (array)\n- `productHandles` (array)\n- `searchQuery` (string)\n- `currency` (string)\n- `country` (string)\n- `vendor` (string)\n- `productType` (string)\n- `tag` (string)\n- `minPrice` (number)",
-        "height": 520,
-        "width": 520,
+        "content": "## Shopify Store Catalog & Pricing Extractor\n\n**Actor:** [Shopify Store Catalog & Pricing Extractor](https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/shopify-store-catalog-and-pricing-extractor.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string, required)\n- `storeUrls` (array)\n- `startUrls` (array)\n- `collectionHandles` (array)\n- `productHandles` (array)\n- `searchQuery` (string)\n- `currency` (string)\n- `country` (string)\n- `vendor` (string)\n- `productType` (string)\n- `tag` (string)\n- `minPrice` (number)\n\n### Output fields\n- `title` (Title)\n- `price` (Price)\n- `currency` (Currency)\n- `compareAtPrice` (Compare at)\n- `available` (Available)\n- `vendor` (Vendor)\n- `productType` (Type)\n- `storeUrl` (Store)\n- `url` (Product URL)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "c0c27881-2ce1-47ee-b107-3ec70acccc3f",
+      "id": "50352e4e-dfe7-49d0-a21f-e7aca3933790",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "a45ae6fc-5bc8-4452-aa2e-39879e288c39",
-  "description": "Pull stores from Shopify with the Shopify Store Catalog & Pricing Extractor actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "ae21157b-2be6-4261-acfb-586bbbff5697",
+  "description": "Scrape a Shopify store's products and prices: runs the Shopify Store Catalog & Pricing Extractor Apify Actor, returns title, price, compareAtPrice, available, vendor and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

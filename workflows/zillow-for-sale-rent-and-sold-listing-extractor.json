@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "6f6c271d-ff55-4bff-ab4b-2a19910fc0fa",
+      "id": "d18dac52-c29a-472e-a43b-6500eab9b381",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"BUY\",\n  \"search\": \"Austin, TX\",\n  \"maxItems\": 500,\n  \"scrapeDetails\": true,\n  \"daysOnZillow\": \"1\",\n  \"sortBy\": \"newest\"\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"BUY\",\n  \"search\": \"Austin, TX\",\n  \"maxItems\": 500,\n  \"scrapeDetails\": true,\n  \"daysOnZillow\": \"1\",\n  \"sortBy\": \"newest\"\n};\n\nreturn [{ json: input }];"
       },
-      "id": "16ba99eb-b250-4117-bd68-7233db18c14b",
+      "id": "ce6b02a3-e6fc-449e-a918-2802556571dd",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "9f904b8c-2e72-47b3-9820-23bfcfb85283",
-      "name": "Run Scraper Finder actor",
+      "id": "9d3d6b35-741a-446f-acd0-12993c66c775",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"address\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "51309087-2dcf-4565-96f9-035cd6213d14",
+      "id": "3c081c09-aba7-479c-a91d-d14b856be56a",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "4e154bca-f1fe-4b0b-bacd-3280c73f7f74",
+      "id": "3b5f2b0b-d515-433d-a63d-06a0300aa996",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "f57daaa1-bd19-4b09-9501-d8b1366a77c0",
+      "id": "83a48e47-8da5-444f-aab3-45f3d5ff56e0",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Zillow For-Sale, Rent & Sold Listing Extractor](https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/zillow-for-sale-rent-and-sold-listing-extractor.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor\n\n### Suggested input fields\n- `search` (string)\n- `mode` (string, required)\n- `maxItems` (integer)\n- `endPage` (integer)\n- `startUrls` (array)\n- `zpids` (array)\n- `addresses` (array)\n- `priceMin` (integer)\n- `priceMax` (integer)\n- `bedsMin` (string)\n- `bathsMin` (string)\n- `sqftMin` (integer)",
-        "height": 520,
-        "width": 520,
+        "content": "## Zillow For-Sale, Rent & Sold Listing Extractor\n\n**Actor:** [Zillow For-Sale, Rent & Sold Listing Extractor](https://apify.com/nimbryxo-studio/zillow-for-sale-rent-and-sold-listing-extractor)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/zillow-for-sale-rent-and-sold-listing-extractor.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `search` (string)\n- `mode` (string, required)\n- `maxItems` (integer)\n- `endPage` (integer)\n- `startUrls` (array)\n- `zpids` (array)\n- `addresses` (array)\n- `priceMin` (integer)\n- `priceMax` (integer)\n- `bedsMin` (string)\n- `bathsMin` (string)\n- `sqftMin` (integer)\n\n### Output fields\n- `address` (Address)\n- `price` (Price)\n- `soldPrice` (Sold Price)\n- `beds` (Beds)\n- `baths` (Baths)\n- `sqft` (Sqft)\n- `propertyType` (Type)\n- `status` (Status)\n- `daysOnZillow` (Days)\n- `url` (URL)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "25dfad41-506a-4f0f-9347-b108ea8ed94f",
+      "id": "d0aec928-f5f3-4641-a5b8-af61e6b065ae",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "1aa86047-1e90-4aa7-aedb-3da4b7e76f2c",
-  "description": "Pull listings from Zillow with the Zillow For-Sale, Rent & Sold Listing Extractor actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "0f264081-bd44-40a1-a6bc-f4d9c18a8e5c",
+  "description": "Zillow for-sale, rental and sold listings: runs the Zillow For-Sale, Rent & Sold Listing Extractor Apify Actor, returns address, price, soldPrice, beds, baths and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }

@@ -14,7 +14,7 @@
           ]
         }
       },
-      "id": "01cfabe2-2052-425c-85b2-fba025615e8b",
+      "id": "40d6080f-eab0-44ab-a8c1-3012955554a8",
       "name": "Daily trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -25,9 +25,9 @@
     },
     {
       "parameters": {
-        "jsCode": "// Scraper Finder starter workflow\n// Edit this object for your run. The full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"countryCode\": \"us\",\n  \"languageCode\": \"en\",\n  \"onSale\": false,\n  \"freeShipping\": false,\n  \"minRating\": \"0\",\n  \"maxResultsPerQuery\": 20,\n  \"includePriceHistory\": true,\n  \"includeProductDetails\": false\n};\n\nreturn [{ json: input }];"
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"mode\": \"search\",\n  \"countryCode\": \"us\",\n  \"languageCode\": \"en\",\n  \"onSale\": false,\n  \"freeShipping\": false,\n  \"minRating\": \"0\",\n  \"maxResultsPerQuery\": 20,\n  \"includePriceHistory\": true,\n  \"includeProductDetails\": false\n};\n\nreturn [{ json: input }];"
       },
-      "id": "89baa91f-967c-4ce4-b249-6bba9eaabfad",
+      "id": "2c137a79-31a9-43fc-a2a1-21979f06f4df",
       "name": "Configure input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -35,7 +35,7 @@
         160,
         0
       ],
-      "notes": "Edit the input object for your city, keyword, or category."
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
     },
     {
       "parameters": {
@@ -50,8 +50,8 @@
           "timeout": 300000
         }
       },
-      "id": "484e7426-bae6-4e24-bbc0-c1a70379be06",
-      "name": "Run Scraper Finder actor",
+      "id": "378d9683-ee1e-4c3c-ae4a-1123deb398e5",
+      "name": "Run Apify Actor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -62,9 +62,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : []);\nconst keyField = \"url\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
+        "jsCode": "const payload = $input.first().json;\nconst rows = Array.isArray(payload) ? payload : (payload && (payload.items || payload.data) ? (payload.items || payload.data) : $input.all().map((item) => item.json));\nconst keyField = \"productUrl\";\nconst seen = new Set();\n\nconst clean = rows\n  .filter((row) => row && typeof row === 'object')\n  .map((row) => {\n    const out = {};\n    for (const [k, v] of Object.entries(row)) {\n      if (v === null || v === undefined) continue;\n      out[k] = typeof v === 'string' ? v.trim() : v;\n    }\n    out._source = \"https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\";\n    out._scrapedAt = new Date().toISOString();\n    return out;\n  })\n  .filter((row) => {\n    const value = row[keyField];\n    const dedupe = value === undefined || value === null || value === '' ? JSON.stringify(row) : String(value).toLowerCase();\n    if (seen.has(dedupe)) return false;\n    seen.add(dedupe);\n    return true;\n  });\n\nreturn clean.map((json) => ({ json }));"
       },
-      "id": "51fe8ed7-9699-45f6-9c87-d320e72299ce",
+      "id": "030ad8a9-2fd3-47ab-a54e-0d12a5dc95c8",
       "name": "Normalize + dedupe",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -75,7 +75,7 @@
     },
     {
       "parameters": {},
-      "id": "1f7bb270-99c6-4f88-a728-de8a78429d52",
+      "id": "0df84ce1-b5f0-4936-a85d-82a0029b7553",
       "name": "Rows ready",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -94,7 +94,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "Leads",
+          "value": "Rows",
           "mode": "name"
         },
         "columns": {
@@ -103,7 +103,7 @@
         },
         "options": {}
       },
-      "id": "21b23569-206e-416e-8b03-ffca928a7730",
+      "id": "bc1bdf31-1fd0-407b-ac15-80dee8b1fd40",
       "name": "Google Sheets (optional)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -116,18 +116,18 @@
     },
     {
       "parameters": {
-        "content": "## Scraper Finder workflow\n\n**Actor:** [Google Shopping Price Comparison & Deal Finder](https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder)\n\n**Workflow file:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/workflows/google-shopping-price-comparison-and-deal-finder.json\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Scraper Finder actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This uses the public actor endpoint. No org token is embedded.\n- `run-sync-get-dataset-items` is best for small and medium runs. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n- The input is a starter. Check the actor page for the current schema: https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder\n\n### Suggested input fields\n- `mode` (string)\n- `queries` (array)\n- `productIds` (array)\n- `category` (string)\n- `countryCode` (string)\n- `languageCode` (string)\n- `sortBy` (string)\n- `condition` (string)\n- `minPrice` (integer)\n- `maxPrice` (integer)\n- `onSale` (boolean)\n- `freeShipping` (boolean)",
-        "height": 520,
-        "width": 520,
+        "content": "## Google Shopping Price Comparison & Deal Finder\n\n**Actor:** [Google Shopping Price Comparison & Deal Finder](https://apify.com/vexaloom-labs/google-shopping-price-comparison-and-deal-finder)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/google-shopping-price-comparison-and-deal-finder.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string)\n- `queries` (array)\n- `productIds` (array)\n- `category` (string)\n- `countryCode` (string)\n- `languageCode` (string)\n- `sortBy` (string)\n- `condition` (string)\n- `minPrice` (integer)\n- `maxPrice` (integer)\n- `onSale` (boolean)\n- `freeShipping` (boolean)\n\n### Output fields\n- `title` (Product)\n- `price` (Price)\n- `currency` (Currency)\n- `merchant` (Merchant)\n- `rating` (Rating)\n- `reviewCount` (Reviews)",
+        "height": 640,
+        "width": 560,
         "color": 4
       },
-      "id": "db49ec57-3d80-4bc4-97c0-e4146f567725",
+      "id": "37dbf37b-ed23-45b3-ad31-7078fc872209",
       "name": "Setup notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -80,
-        -420
+        -560
       ]
     }
   ],
@@ -147,14 +147,14 @@
       "main": [
         [
           {
-            "node": "Run Scraper Finder actor",
+            "node": "Run Apify Actor",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Scraper Finder actor": {
+    "Run Apify Actor": {
       "main": [
         [
           {
@@ -197,6 +197,6 @@
     "templateCredsSetupCompleted": false
   },
   "tags": [],
-  "versionId": "32a89f4a-7262-42fb-9a5e-0d4ec65eb628",
-  "description": "Pull products from Google Shopping with the Google Shopping Price Comparison & Deal Finder actor, normalize the rows, and dedupe before writing to a sheet."
+  "versionId": "0ccc179f-2f00-45e0-a2c5-9fd86349edbb",
+  "description": "Google Shopping price comparison: runs the Google Shopping Price Comparison & Deal Finder Apify Actor, returns title, price, merchant, rating, reviewCount and more, then normalizes and dedupes the rows before an optional Google Sheets append."
 }
