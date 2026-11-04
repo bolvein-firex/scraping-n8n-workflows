@@ -1,8 +1,8 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 9 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 10 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**20 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
+**21 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
 
 ## Quick start
 
@@ -51,6 +51,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 
 | Job | Workflow | Returns |
 |---|---|---|
+| Greenhouse ATS job board | [Greenhouse ATS Job Board Lookup by Company](docs/greenhouse-ats-job-board-lookup-by-company.md) | `title`, `companySlug`, `companyName`, `location`, `departments` |
 | Indeed job scraper with salaries | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | `positionName`, `displayTitle`, `company`, `rating`, `salary` |
 | We Work Remotely job listings scraper | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | `title`, `company`, `category`, `salary`, `postedAt` |
 
@@ -86,15 +87,16 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 9 | [Google Maps Grid-Based Market Saturation Scanner](docs/google-maps-grid-based-market-saturation-scanner.md) | Google Maps | `name`, `categoryName`, `totalScore`, `reviewsCount`, `phone` | [JSON](workflows/google-maps-grid-based-market-saturation-scanner.json) | [Watch](https://www.youtube.com/shorts/uom3-Fy_xFk) |
 | 10 | [Google Shopping Price Comparison & Deal Finder](docs/google-shopping-price-comparison-and-deal-finder.md) | Google Shopping | `title`, `price`, `merchant`, `rating`, `reviewCount` | [JSON](workflows/google-shopping-price-comparison-and-deal-finder.json) |  |
 | 11 | [Google Trends Interest & Related Query Scraper](docs/google-trends-interest-and-related-query-scraper.md) | Google Trends | `searchTerms`, `title`, `geoName`, `averageInterest`, `growthPercent` | [JSON](workflows/google-trends-interest-and-related-query-scraper.json) | [Watch](https://www.youtube.com/shorts/gDZBpA25UB8) |
-| 12 | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | Indeed | `positionName`, `displayTitle`, `company`, `rating`, `salary` | [JSON](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | [Watch](https://www.youtube.com/shorts/33f3pNEO6Oc) |
-| 13 | [New Jersey Business Registry Lookup & Name Checker](docs/new-jersey-business-registry-lookup-and-name-checker.md) | NJ business registry | `businessName`, `entityTypeAbbr`, `entityTypeFull`, `city`, `incorporatedDate` | [JSON](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | [Watch](https://www.youtube.com/shorts/tGV77V4rMqk) |
-| 14 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](docs/reddit-multi-mode-scraper-for-posts-comments-and-profiles.md) | Reddit | `subreddit_prefixed`, `title`, `author`, `score`, `commentCount` | [JSON](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | [Watch](https://www.youtube.com/shorts/3TmxkUNaB0U) |
-| 15 | [Shopify Store Catalog & Pricing Extractor](docs/shopify-store-catalog-and-pricing-extractor.md) | Shopify | `title`, `price`, `compareAtPrice`, `available`, `vendor` | [JSON](workflows/shopify-store-catalog-and-pricing-extractor.json) | [Watch](https://www.youtube.com/shorts/398NV7q-K6w) |
-| 16 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
-| 17 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
-| 18 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
-| 19 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 20 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 12 | [Greenhouse ATS Job Board Lookup by Company](docs/greenhouse-ats-job-board-lookup-by-company.md) | Greenhouse | `title`, `companySlug`, `companyName`, `location`, `departments` | [JSON](workflows/greenhouse-ats-job-board-lookup-by-company.json) |  |
+| 13 | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | Indeed | `positionName`, `displayTitle`, `company`, `rating`, `salary` | [JSON](workflows/indeed-global-job-scraper-with-company-salary-reports.json) | [Watch](https://www.youtube.com/shorts/33f3pNEO6Oc) |
+| 14 | [New Jersey Business Registry Lookup & Name Checker](docs/new-jersey-business-registry-lookup-and-name-checker.md) | NJ business registry | `businessName`, `entityTypeAbbr`, `entityTypeFull`, `city`, `incorporatedDate` | [JSON](workflows/new-jersey-business-registry-lookup-and-name-checker.json) | [Watch](https://www.youtube.com/shorts/tGV77V4rMqk) |
+| 15 | [Reddit Multi-Mode Scraper for Posts, Comments & Profiles](docs/reddit-multi-mode-scraper-for-posts-comments-and-profiles.md) | Reddit | `subreddit_prefixed`, `title`, `author`, `score`, `commentCount` | [JSON](workflows/reddit-multi-mode-scraper-for-posts-comments-and-profiles.json) | [Watch](https://www.youtube.com/shorts/3TmxkUNaB0U) |
+| 16 | [Shopify Store Catalog & Pricing Extractor](docs/shopify-store-catalog-and-pricing-extractor.md) | Shopify | `title`, `price`, `compareAtPrice`, `available`, `vendor` | [JSON](workflows/shopify-store-catalog-and-pricing-extractor.json) | [Watch](https://www.youtube.com/shorts/398NV7q-K6w) |
+| 17 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
+| 18 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
+| 19 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
+| 20 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 21 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
