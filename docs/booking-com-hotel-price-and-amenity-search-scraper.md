@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Booking.com Hotel Price & Amenity Search Scra
 - Actor: https://apify.com/nimbryxo-studio/booking-com-hotel-price-and-amenity-search-scraper
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/booking-com-hotel-price-and-amenity-search-scraper/SKILL.md
 
+## Watch the Short
+
+- [Compare hotel prices before your weekly check](https://www.youtube.com/shorts/jQWhZPI54SI)
+
 ## What it does
 
 Search Booking.com for a destination and dates, and collect each property's price, rating, review count, amenities, and breakfast info for the stay you specify.

@@ -8,6 +8,10 @@ A free n8n workflow that runs the [AliExpress Multi-Region Search, Store & Revie
 - Actor: https://apify.com/vexaloom-labs/aliexpress-multi-region-search-store-and-review
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/aliexpress-multi-region-search-store-and-review-scraper/SKILL.md
 
+## Watch the Short
+
+- [Spot repeat complaints in competitor reviews](https://www.youtube.com/shorts/lY2MQAk6oJA)
+
 ## What it does
 
 Search AliExpress or fetch product, store, and review records by ID or URL across 18 regional storefronts and 42 currencies, with price, rating, and ship-from/ship-to filters.

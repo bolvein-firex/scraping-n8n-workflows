@@ -1,8 +1,8 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 8 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 9 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**19 workflows** · 14 with a YouTube Short · last updated 2026-11-04 · MIT licence
+**20 workflows** · 16 with a YouTube Short · last updated 2026-11-04 · MIT licence
 
 ## Quick start
 
@@ -52,6 +52,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Job | Workflow | Returns |
 |---|---|---|
 | Indeed job scraper with salaries | [Indeed Global Job Scraper with Company Salary Reports](docs/indeed-global-job-scraper-with-company-salary-reports.md) | `positionName`, `displayTitle`, `company`, `rating`, `salary` |
+| We Work Remotely job listings scraper | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | `title`, `company`, `category`, `salary`, `postedAt` |
 
 ### Social media and trends
 
@@ -75,11 +76,11 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | # | Workflow | Platform | Output fields | File | Short |
 |---|---|---|---|---|---|
 | 1 | [Airbnb Listing Price & Location Finder](docs/airbnb-listing-price-and-location-finder.md) | Airbnb | `name`, `nightlyPrice`, `totalPrice`, `rating`, `reviewCount` | [JSON](workflows/airbnb-listing-price-and-location-finder.json) | [Watch](https://www.youtube.com/shorts/aVEDRMB3vsU) |
-| 2 | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | AliExpress | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` | [JSON](workflows/aliexpress-multi-region-search-store-and-review-scraper.json) |  |
+| 2 | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | AliExpress | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` | [JSON](workflows/aliexpress-multi-region-search-store-and-review-scraper.json) | [Watch](https://www.youtube.com/shorts/lY2MQAk6oJA) |
 | 3 | [Amazon Customer Review & Rating Summary Scraper](docs/amazon-customer-review-and-rating-summary-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-customer-review-and-rating-summary-scraper.json) | [Watch](https://www.youtube.com/shorts/WhVOks5q4MU) |
 | 4 | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | Amazon | `title`, `asin`, `price`, `stars`, `reviewsCount` | [JSON](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | [Watch](https://www.youtube.com/shorts/SqsDoB0jyD8) |
 | 5 | [Amazon Review Aggregates & Extended History Scraper](docs/amazon-review-aggregates-and-extended-history-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-review-aggregates-and-extended-history-scraper.json) |  |
-| 6 | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | Booking.com | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` | [JSON](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) |  |
+| 6 | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | Booking.com | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` | [JSON](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) | [Watch](https://www.youtube.com/shorts/jQWhZPI54SI) |
 | 7 | [Facebook Marketplace Listing & Price Extractor](docs/facebook-marketplace-listing-and-price-extractor.md) | Facebook Marketplace | `title`, `price`, `city`, `state`, `locationText` | [JSON](workflows/facebook-marketplace-listing-and-price-extractor.json) |  |
 | 8 | [Google Maps Business Lead & Email Finder](docs/google-maps-business-lead-and-email-finder.md) | Google Maps | `name`, `googleBusinessCategories`, `phoneNumber`, `email`, `reviewScore` | [JSON](workflows/google-maps-business-lead-and-email-finder.json) | [Watch](https://www.youtube.com/shorts/ofD2844kDPQ) |
 | 9 | [Google Maps Grid-Based Market Saturation Scanner](docs/google-maps-grid-based-market-saturation-scanner.md) | Google Maps | `name`, `categoryName`, `totalScore`, `reviewsCount`, `phone` | [JSON](workflows/google-maps-grid-based-market-saturation-scanner.json) | [Watch](https://www.youtube.com/shorts/uom3-Fy_xFk) |
@@ -91,8 +92,9 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 15 | [Shopify Store Catalog & Pricing Extractor](docs/shopify-store-catalog-and-pricing-extractor.md) | Shopify | `title`, `price`, `compareAtPrice`, `available`, `vendor` | [JSON](workflows/shopify-store-catalog-and-pricing-extractor.json) | [Watch](https://www.youtube.com/shorts/398NV7q-K6w) |
 | 16 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
 | 17 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
-| 18 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 19 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 18 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) |  |
+| 19 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 20 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
