@@ -8,6 +8,10 @@ A free n8n workflow that runs the [We Work Remotely Job Listings & Salary Extrac
 - Actor: https://apify.com/dataspryva/we-work-remotely-job-listings-and-salary-extractor
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/we-work-remotely-job-listings-and-salary-extractor/SKILL.md
 
+## Watch the Short
+
+- [Stop copying remote salaries; put roles in one sheet](https://www.youtube.com/shorts/aJWSYR7WvXE)
+
 ## What it does
 
 Reads We Work Remotely category pages or keyword search results and follows each listing for salary range, employment type, skills, applicant region requirements, and company details.
