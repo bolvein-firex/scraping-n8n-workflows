@@ -1,0 +1,202 @@
+{
+  "name": "Himalayas Remote Job Finder with Salary & Tech Stack - clean export",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "c9fa46f3-778a-46e1-abc0-967ad0d792ad",
+      "name": "Daily trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"searchQuery\": \"software engineer\",\n  \"maxItems\": 25,\n  \"mode\": \"searchJobs\"\n};\n\nreturn [{ json: input }];"
+      },
+      "id": "0bce996e-b63c-4723-a3b8-8e2600681f23",
+      "name": "Configure input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/vexaloom-labs~himalayas-remote-job-finder-with-salary-and-tech/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "d9ac96ba-9144-4720-af54-eff0921d2545",
+      "name": "Run Apify Actor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "notes": "Select the Apify API Token (Query Auth) credential."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = null; // no stable id in this output: identical rows are dropped\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/vexaloom-labs/himalayas-remote-job-finder-with-salary-and-tech\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
+      },
+      "id": "9a9135da-0fdb-46dd-a12c-0686cc398427",
+      "name": "Normalize + dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "842b5b97-73da-4054-aed4-019a707f9209",
+      "name": "Rows ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Rows",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "aaed47d8-d643-4460-a78c-0523a290a8c1",
+      "name": "Google Sheets (optional)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable this after adding your Google Sheets credential and sheet ID."
+    },
+    {
+      "parameters": {
+        "content": "## Himalayas Remote Job Finder with Salary & Tech Stack\n\n**Actor:** [Himalayas Remote Job Finder with Salary & Tech Stack](https://apify.com/vexaloom-labs/himalayas-remote-job-finder-with-salary-and-tech)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/himalayas-remote-job-finder-with-salary-and-tech-stack.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string, required)\n- `searchQuery` (string)\n- `companySlug` (string)\n- `jobUrls` (array)\n- `country` (string)\n- `worldwide` (boolean)\n- `excludeWorldwide` (boolean)\n- `seniority` (array)\n- `employmentType` (string)\n- `timezone` (string)\n- `categories` (array)\n- `minSalary` (integer)\n\n### Output fields\n- `title` (Title)\n- `company` (Company)\n- `employmentType` (Employment Type)\n- `seniority` (Seniority)\n- `salaryMin` (Salary Min)\n- `salaryMax` (Salary Max)\n- `salaryPeriod` (Salary Period)\n- `salaryCurrency` (Salary Currency)\n- `salaryAnnualMin` (Salary Annual Min)\n- `salaryAnnualMax` (Salary Annual Max)\n- `location` (Location)\n- `skills` (Skills)",
+        "height": 640,
+        "width": 560,
+        "color": 4
+      },
+      "id": "8b5dba2f-9634-4877-ae51-b5bf1a673eb6",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -560
+      ]
+    }
+  ],
+  "connections": {
+    "Daily trigger": {
+      "main": [
+        [
+          {
+            "node": "Configure input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure input": {
+      "main": [
+        [
+          {
+            "node": "Run Apify Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Apify Actor": {
+      "main": [
+        [
+          {
+            "node": "Normalize + dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + dedupe": {
+      "main": [
+        [
+          {
+            "node": "Rows ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows ready": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [],
+  "versionId": "78f157c3-3a27-4c2c-a99c-0c38894c172e",
+  "description": "Himalayas remote job: runs the Himalayas Remote Job Finder with Salary & Tech Stack Apify Actor, returns title, company, salaryMin, salaryMax, salaryPeriod and more, then normalizes and dedupes the rows before an optional Google Sheets append."
+}
