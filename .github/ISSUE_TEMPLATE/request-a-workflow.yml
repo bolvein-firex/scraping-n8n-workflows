@@ -1,0 +1,49 @@
+name: Request a workflow
+description: Ask for a workflow for a site or a data job that is not in the list yet.
+title: "Workflow request: "
+labels: ["workflow request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Say which site, which fields and what you do with them. Requests are public, so leave out private details.
+  - type: input
+    id: site
+    attributes:
+      label: Site or source
+      placeholder: e.g. Yelp, LinkedIn posts, Etsy
+    validations:
+      required: true
+  - type: textarea
+    id: job
+    attributes:
+      label: What you want to do with the data
+      description: e.g. "every morning, collect new posts that mention my keyword and add them to a Google Sheet"
+    validations:
+      required: true
+  - type: input
+    id: fields
+    attributes:
+      label: Fields you need
+      placeholder: e.g. title, url, author, date
+  - type: input
+    id: destination
+    attributes:
+      label: Where the rows should go
+      placeholder: e.g. Google Sheets, Airtable, Slack, a webhook
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often it should run
+      options:
+        - Once
+        - Daily
+        - Hourly
+        - On demand
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Public data
+      options:
+        - label: The data is public (no login, no paywall).
+          required: true

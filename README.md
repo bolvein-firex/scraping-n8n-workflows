@@ -146,6 +146,10 @@ Daily trigger → Configure input → Run Apify Actor → Normalize + dedupe →
 - Short video breakdowns: https://www.youtube.com/@ScraperFinder
 - Setup notes: [docs/setup-apify.md](docs/setup-apify.md), [docs/import.md](docs/import.md)
 
+## Contributing
+
+Missing a site? [Request a workflow](https://github.com/bolvein-firex/scraping-n8n-workflows/issues/new/choose). Questions go to [Discussions](https://github.com/bolvein-firex/scraping-n8n-workflows/discussions). See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Guardrails
 
 Public data only. Do not use these workflows for private, login-protected or paywalled data. Respect robots.txt, site terms and local law.

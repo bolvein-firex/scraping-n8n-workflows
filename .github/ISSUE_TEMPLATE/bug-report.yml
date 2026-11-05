@@ -1,0 +1,37 @@
+name: Bug report
+description: A workflow fails, returns nothing or returns the wrong fields.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: input
+    id: which
+    attributes:
+      label: Which workflow
+      placeholder: e.g. workflows/google-maps-business-lead-and-email-finder.json
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: n8n version
+      description: Settings > About n8n
+      placeholder: e.g. 1.112.0
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The error text from the failing node, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: The input you used
+      render: json
+  - type: checkboxes
+    id: secrets
+    attributes:
+      label: Secrets
+      options:
+        - label: I removed my Apify token and any private data from what I pasted.
+          required: true
