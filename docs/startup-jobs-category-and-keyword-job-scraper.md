@@ -8,6 +8,10 @@ A free n8n workflow that runs the [startup.jobs Category & Keyword Job Scraper](
 - Actor: https://apify.com/vexaloom-labs/startup-jobs-category-and-keyword-job-scraper
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/startup-jobs-category-and-keyword-job-scraper/SKILL.md
 
+## Watch the Short
+
+- [See startup hiring before the weekly standup](https://www.youtube.com/shorts/SOMB7J9-Iak)
+
 ## What it does
 
 Collect startup job listings from startup.jobs by category and keyword, with title, company, work mode, salary, job type, listing text, tags, and the listing link.

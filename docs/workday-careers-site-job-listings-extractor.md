@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Workday Careers Site Job Listings Extractor](
 - Actor: https://apify.com/nimbryxo-studio/workday-careers-site-job-listings-extractor
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/workday-careers-site-job-listings-extractor/SKILL.md
 
+## Watch the Short
+
+- [Stop checking Workday roles one by one](https://www.youtube.com/shorts/cP29fxKOpvM)
+
 ## What it does
 
 Pull job postings from any company's Workday careers site: title, location, requisition ID, posting and start dates, time type, remote status and full description. Filter by keyword, location or posting date.
