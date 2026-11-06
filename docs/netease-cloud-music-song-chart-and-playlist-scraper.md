@@ -8,6 +8,10 @@ A free n8n workflow that runs the [NetEase Cloud Music Song, Chart & Playlist Sc
 - Actor: https://apify.com/dataspryva/netease-cloud-music-song-chart-and-playlist
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/netease-cloud-music-song-chart-and-playlist-scraper/SKILL.md
 
+## Watch the Short
+
+- [Choose your next playlist from live charts](https://www.youtube.com/shorts/k3LbS3Z4Eqc)
+
 ## What it does
 
 Search NetEase Cloud Music songs, fetch song details by URL, pull an artist's top songs or album list, browse playlists by genre, or get any top-100 chart. Returns artist, album, duration, cover art, and popularity for each track.

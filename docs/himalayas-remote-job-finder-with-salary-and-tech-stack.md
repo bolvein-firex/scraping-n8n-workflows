@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Himalayas Remote Job Finder with Salary & Tec
 - Actor: https://apify.com/vexaloom-labs/himalayas-remote-job-finder-with-salary-and-tech
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/himalayas-remote-job-finder-with-salary-and-tech-stack/SKILL.md
 
+## Watch the Short
+
+- [Build your remote role shortlist before lunch](https://www.youtube.com/shorts/OwuknGY8obI)
+
 ## What it does
 
 Search Himalayas remote job listings by keyword or company and get salary range, employment type, tech stack and job page link for each role.

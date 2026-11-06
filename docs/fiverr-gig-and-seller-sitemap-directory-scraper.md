@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Fiverr Gig & Seller Sitemap Directory Scraper
 - Actor: https://apify.com/vexaloom-labs/fiverr-gig-and-seller-sitemap-directory-scraper
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/fiverr-gig-and-seller-sitemap-directory-scraper/SKILL.md
 
+## Watch the Short
+
+- [Stop copying Fiverr profiles; build one shortlist](https://www.youtube.com/shorts/JsVKl5TOvJE)
+
 ## What it does
 
 List live Fiverr gigs, seller profiles, categories, search tags and Logo Maker ideas straight from Fiverr's own directories, with best-effort full gig detail by URL.

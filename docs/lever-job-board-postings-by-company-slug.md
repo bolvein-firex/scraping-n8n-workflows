@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Lever Job Board Postings by Company Slug](htt
 - Actor: https://apify.com/vexaloom-labs/lever-job-board-postings-by-company-slug
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/lever-job-board-postings-by-company-slug/SKILL.md
 
+## Watch the Short
+
+- [Weekly job board tracking in one sheet](https://www.youtube.com/shorts/Fj8lsPbASu0)
+
 ## What it does
 
 Pull open job postings from one or more Lever.co company boards, or fetch specific postings by ID, with location, team, salary range, requirements, and apply links, filterable by team, location, and commitment type.
