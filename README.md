@@ -1,8 +1,8 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 24 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 25 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**38 workflows** · 23 with a YouTube Short · last updated 2026-11-06 · MIT licence
+**39 workflows** · 23 with a YouTube Short · last updated 2026-11-06 · MIT licence
 
 ## Quick start
 
@@ -48,6 +48,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Airbnb price scraper | [Airbnb Listing Price & Location Finder](docs/airbnb-listing-price-and-location-finder.md) | `name`, `nightlyPrice`, `totalPrice`, `rating`, `reviewCount` |
 | Booking.com hotel prices for your dates | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` |
 | Google Flights fare scraper | [Google Flights Fare & Itinerary Filter Scraper](docs/google-flights-fare-and-itinerary-filter-scraper.md) | `price`, `airline`, `departureAirport`, `departureTime`, `arrivalAirport` |
+| Washington Trails Association hike | [Washington Trails Association Hike & Trip Report Finder](docs/washington-trails-association-hike-and-trip-report-finder.md) | `trailName`, `region`, `lengthMiles`, `rating`, `reviewCount` |
 
 ### Jobs and salaries
 
@@ -131,11 +132,12 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 31 | [TikTok Keyword Search & Discovery Scraper](docs/tiktok-keyword-search-and-discovery-scraper.md) | TikTok | `rank`, `caption`, `playCount`, `likeCount`, `commentCount` | [JSON](workflows/tiktok-keyword-search-and-discovery-scraper.json) |  |
 | 32 | [TikTok Verified Mention Tracker](docs/tiktok-verified-mention-tracker.md) | TikTok | `targetUsername`, `postUrl`, `author.followerCount`, `playCount`, `likeCount` | [JSON](workflows/tiktok-verified-mention-tracker.json) |  |
 | 33 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
-| 34 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) | [Watch](https://www.youtube.com/shorts/aJWSYR7WvXE) |
-| 35 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 36 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) | [Watch](https://www.youtube.com/shorts/cP29fxKOpvM) |
-| 37 | [YouTube Video Comment & Reply Thread Scraper](docs/youtube-video-comment-and-reply-thread-scraper.md) | YouTube | `authorName`, `text`, `likeCount`, `replyCount`, `isHearted` | [JSON](workflows/youtube-video-comment-and-reply-thread-scraper.json) |  |
-| 38 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 34 | [Washington Trails Association Hike & Trip Report Finder](docs/washington-trails-association-hike-and-trip-report-finder.md) | Washington Trails Association | `trailName`, `region`, `lengthMiles`, `rating`, `reviewCount` | [JSON](workflows/washington-trails-association-hike-and-trip-report-finder.json) |  |
+| 35 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) | [Watch](https://www.youtube.com/shorts/aJWSYR7WvXE) |
+| 36 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 37 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) | [Watch](https://www.youtube.com/shorts/cP29fxKOpvM) |
+| 38 | [YouTube Video Comment & Reply Thread Scraper](docs/youtube-video-comment-and-reply-thread-scraper.md) | YouTube | `authorName`, `text`, `likeCount`, `replyCount`, `isHearted` | [JSON](workflows/youtube-video-comment-and-reply-thread-scraper.json) |  |
+| 39 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
