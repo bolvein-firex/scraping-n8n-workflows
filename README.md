@@ -1,6 +1,6 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 21 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 20 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
 **34 workflows** · 23 with a YouTube Short · last updated 2026-11-06 · MIT licence
 
@@ -28,6 +28,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Job | Workflow | Returns |
 |---|---|---|
 | AliExpress product search export | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` |
+| Amazon deals grid | [Amazon Deals Grid Tracker by Category & Discount](docs/amazon-deals-grid-tracker-by-category-and-discount.md) | `asin`, `title`, `dealPrice`, `savingsPercent`, `averageRating` |
 | Amazon price tracking | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | `title`, `asin`, `price`, `stars`, `reviewsCount` |
 | Facebook Marketplace scraper | [Facebook Marketplace Listing & Price Extractor](docs/facebook-marketplace-listing-and-price-extractor.md) | `title`, `price`, `city`, `state`, `locationText` |
 | Google Shopping price comparison | [Google Shopping Price Comparison & Deal Finder](docs/google-shopping-price-comparison-and-deal-finder.md) | `title`, `price`, `merchant`, `rating`, `reviewCount` |
@@ -83,7 +84,6 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 
 | Job | Workflow | Returns |
 |---|---|---|
-| ESPN scores, standings, teams | [ESPN Scores, Standings, Teams & News by League](docs/espn-scores-standings-teams-and-news-by-league.md) | `mode`, `sport`, `league`, `homeScore`, `awayScore` |
 | MLB teams, player search | [MLB Teams, Player Search & Season Schedule Lookup](docs/mlb-teams-player-search-and-season-schedule-lookup.md) | `teamName`, `playerName`, `eventName`, `homeTeam`, `awayTeam` |
 | Multi-League season results | [Multi-League Season Results & Team Lookup](docs/multi-league-season-results-and-team-lookup.md) | `homeTeam`, `awayTeam`, `homeScore`, `awayScore`, `matchDate` |
 | SofaScore live scores, standings | [SofaScore Live Scores, Standings & Team Search Data](docs/sofascore-live-scores-standings-and-team-search-data.md) | `name`, `homeTeam`, `awayTeam`, `homeScore`, `awayScore` |
@@ -97,10 +97,10 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 1 | [Airbnb Listing Price & Location Finder](docs/airbnb-listing-price-and-location-finder.md) | Airbnb | `name`, `nightlyPrice`, `totalPrice`, `rating`, `reviewCount` | [JSON](workflows/airbnb-listing-price-and-location-finder.json) | [Watch](https://www.youtube.com/shorts/aVEDRMB3vsU) |
 | 2 | [AliExpress Multi-Region Search, Store & Review Scraper](docs/aliexpress-multi-region-search-store-and-review-scraper.md) | AliExpress | `title`, `salePrice`, `originalPrice`, `discountPercent`, `rating` | [JSON](workflows/aliexpress-multi-region-search-store-and-review-scraper.json) | [Watch](https://www.youtube.com/shorts/lY2MQAk6oJA) |
 | 3 | [Amazon Customer Review & Rating Summary Scraper](docs/amazon-customer-review-and-rating-summary-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-customer-review-and-rating-summary-scraper.json) | [Watch](https://www.youtube.com/shorts/WhVOks5q4MU) |
-| 4 | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | Amazon | `title`, `asin`, `price`, `stars`, `reviewsCount` | [JSON](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | [Watch](https://www.youtube.com/shorts/SqsDoB0jyD8) |
-| 5 | [Amazon Review Aggregates & Extended History Scraper](docs/amazon-review-aggregates-and-extended-history-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-review-aggregates-and-extended-history-scraper.json) |  |
-| 6 | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | Booking.com | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` | [JSON](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) | [Watch](https://www.youtube.com/shorts/jQWhZPI54SI) |
-| 7 | [ESPN Scores, Standings, Teams & News by League](docs/espn-scores-standings-teams-and-news-by-league.md) | ESPN | `mode`, `sport`, `league`, `homeScore`, `awayScore` | [JSON](workflows/espn-scores-standings-teams-and-news-by-league.json) |  |
+| 4 | [Amazon Deals Grid Tracker by Category & Discount](docs/amazon-deals-grid-tracker-by-category-and-discount.md) | Amazon | `asin`, `title`, `dealPrice`, `savingsPercent`, `averageRating` | [JSON](workflows/amazon-deals-grid-tracker-by-category-and-discount.json) |  |
+| 5 | [Amazon Multi-Domain Product Price & Detail Scraper](docs/amazon-multi-domain-product-price-and-detail-scraper.md) | Amazon | `title`, `asin`, `price`, `stars`, `reviewsCount` | [JSON](workflows/amazon-multi-domain-product-price-and-detail-scraper.json) | [Watch](https://www.youtube.com/shorts/SqsDoB0jyD8) |
+| 6 | [Amazon Review Aggregates & Extended History Scraper](docs/amazon-review-aggregates-and-extended-history-scraper.md) | Amazon | `productAsin`, `ratingScore`, `reviewTitle`, `reviewDescription`, `isVerified` | [JSON](workflows/amazon-review-aggregates-and-extended-history-scraper.json) |  |
+| 7 | [Booking.com Hotel Price & Amenity Search Scraper](docs/booking-com-hotel-price-and-amenity-search-scraper.md) | Booking.com | `name`, `price`, `pricePerNight`, `rating`, `reviewCount` | [JSON](workflows/booking-com-hotel-price-and-amenity-search-scraper.json) | [Watch](https://www.youtube.com/shorts/jQWhZPI54SI) |
 | 8 | [Facebook Marketplace Listing & Price Extractor](docs/facebook-marketplace-listing-and-price-extractor.md) | Facebook Marketplace | `title`, `price`, `city`, `state`, `locationText` | [JSON](workflows/facebook-marketplace-listing-and-price-extractor.json) |  |
 | 9 | [Fiverr Gig & Seller Sitemap Directory Scraper](docs/fiverr-gig-and-seller-sitemap-directory-scraper.md) | Fiverr | `title`, `gigUrl`, `priceMin`, `priceMax`, `rating` | [JSON](workflows/fiverr-gig-and-seller-sitemap-directory-scraper.json) | [Watch](https://www.youtube.com/shorts/JsVKl5TOvJE) |
 | 10 | [Google Flights Fare & Itinerary Filter Scraper](docs/google-flights-fare-and-itinerary-filter-scraper.md) | Google Flights | `price`, `airline`, `departureAirport`, `departureTime`, `arrivalAirport` | [JSON](workflows/google-flights-fare-and-itinerary-filter-scraper.json) |  |
