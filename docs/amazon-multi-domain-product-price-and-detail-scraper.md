@@ -53,7 +53,7 @@ The input passes the Actor's input schema (checked at every publish). First run:
 
 ## Output fields
 
-Columns from the Actor's dataset schema, build 1.0.4:
+Columns from the Actor's dataset schema, build 1.0.5:
 
 | Field | Label |
 |---|---|
