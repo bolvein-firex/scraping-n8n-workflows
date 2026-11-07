@@ -8,6 +8,10 @@ A free n8n workflow that runs the [TikTok Verified Mention Tracker](https://apif
 - Actor: https://apify.com/nimbryxo-studio/tiktok-profile-mention-scraper
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/tiktok-verified-mention-tracker/SKILL.md
 
+## Watch the Short
+
+- [See which TikTok posts really tagged your client](https://www.youtube.com/shorts/06JYF6pVjgE)
+
 ## What it does
 
 Find TikTok posts that tag a specific creator or brand handle, with each result checked against TikTok's own mention markup so you can tell a real @mention from a caption that merely contains the name.

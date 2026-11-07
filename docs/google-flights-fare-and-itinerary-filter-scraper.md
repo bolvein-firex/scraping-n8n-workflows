@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Google Flights Fare & Itinerary Filter Scrape
 - Actor: https://apify.com/vexaloom-labs/google-flights-fare-and-itinerary-filter-scraper
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/google-flights-fare-and-itinerary-filter-scraper/SKILL.md
 
+## Watch the Short
+
+- [Compare flight fares before Monday's booking brief](https://www.youtube.com/shorts/ntNLhXTe4VE)
+
 ## What it does
 
 Search Google Flights for one-way or round-trip fares across any cabin class, then narrow results by stops, total duration, airline, and price range, with an optional price-alert flag.

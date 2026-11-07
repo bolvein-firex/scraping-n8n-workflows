@@ -8,6 +8,10 @@ A free n8n workflow that runs the [MLB Teams, Player Search & Season Schedule Lo
 - Actor: https://apify.com/vexaloom-labs/mlb-teams-player-search-and-season-schedule-lookup
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/mlb-teams-player-search-and-season-schedule-lookup/SKILL.md
 
+## Watch the Short
+
+- [See the MLB schedule before first pitch](https://www.youtube.com/shorts/4VOTofCYCmk)
+
 ## What it does
 
 Look up every current MLB team, search for a player by name, or pull a full season's schedule and scores, with stadium, roster, and matchup details for each record.

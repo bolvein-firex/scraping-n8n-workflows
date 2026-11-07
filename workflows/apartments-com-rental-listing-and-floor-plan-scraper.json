@@ -1,0 +1,202 @@
+{
+  "name": "Apartments.com Rental Listing & Floor Plan Scraper - clean export",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "124453a9-2368-4eec-a554-97efcad299de",
+      "name": "Daily trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"searchLocation\": \"New York, NY\",\n  \"maxItems\": 25,\n  \"maxPages\": 1\n};\n\nreturn [{ json: input }];"
+      },
+      "id": "4cd3e28b-c719-40c2-a6fb-589cf530ae39",
+      "name": "Configure input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/dataspryva~apartments-com-rental-listing-and-floor-plan/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "4c57f0f9-1d90-4214-a676-ef5d94d0b5c7",
+      "name": "Run Apify Actor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "notes": "Select the Apify API Token (Query Auth) credential."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = \"url\"; // a stable identity from the Actor output\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/dataspryva/apartments-com-rental-listing-and-floor-plan\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
+      },
+      "id": "a0c1fd37-d0fc-40a0-a133-30a61c9020fe",
+      "name": "Normalize + dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "e7c3c4e4-41e6-4c23-af9e-0a83567d2479",
+      "name": "Rows ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Rows",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "71078277-b18a-4336-a9c5-983fe0fdb581",
+      "name": "Google Sheets (optional)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable this after adding your Google Sheets credential and sheet ID."
+    },
+    {
+      "parameters": {
+        "content": "## Apartments.com Rental Listing & Floor Plan Scraper\n\n**Actor:** [Apartments.com Rental Listing & Floor Plan Scraper](https://apify.com/dataspryva/apartments-com-rental-listing-and-floor-plan)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/apartments-com-rental-listing-and-floor-plan-scraper.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string)\n- `searchLocation` (string)\n- `bedrooms` (string)\n- `bathrooms` (string)\n- `priceMin` (integer)\n- `priceMax` (integer)\n- `sqftMin` (integer)\n- `sqftMax` (integer)\n- `propertyType` (string)\n- `petPolicy` (string)\n- `amenities` (array)\n- `rentSpecials` (boolean)\n\n### Output fields\n- `name` (Name)\n- `address` (Address)\n- `city` (City)\n- `state` (State)\n- `zipCode` (Zip Code)\n- `priceMin` (Price Min)\n- `priceMax` (Price Max)\n- `priceCurrency` (Price Currency)\n- `bedsMin` (Beds Min)\n- `bedsMax` (Beds Max)\n- `propertyType` (Property Type)\n- `rating` (Rating)",
+        "height": 640,
+        "width": 560,
+        "color": 4
+      },
+      "id": "781db7d3-2439-4986-a33e-8af7f9c68a82",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -700
+      ]
+    }
+  ],
+  "connections": {
+    "Daily trigger": {
+      "main": [
+        [
+          {
+            "node": "Configure input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure input": {
+      "main": [
+        [
+          {
+            "node": "Run Apify Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Apify Actor": {
+      "main": [
+        [
+          {
+            "node": "Normalize + dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + dedupe": {
+      "main": [
+        [
+          {
+            "node": "Rows ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows ready": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [],
+  "versionId": "18ae5143-9b50-4138-a4ca-448ec1ce1de2",
+  "description": "Apartments.com rental listing scraper: runs the Apartments.com Rental Listing & Floor Plan Scraper Apify Actor, returns name, address, priceMin, priceMax, priceCurrency and more, then normalizes and dedupes the rows before an optional Google Sheets append."
+}

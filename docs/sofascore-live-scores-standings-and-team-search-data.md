@@ -8,6 +8,10 @@ A free n8n workflow that runs the [SofaScore Live Scores, Standings & Team Searc
 - Actor: https://apify.com/vexaloom-labs/sofascore-live-scores-standings-and-team-search
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/sofascore-live-scores-standings-and-team-search-data/SKILL.md
 
+## Watch the Short
+
+- [Build a live football score sheet by matchday](https://www.youtube.com/shorts/qMmkq9VlH8k)
+
 ## What it does
 
 Get SofaScore live scores, scheduled fixtures, league standings and team/player/tournament search results across 17 sports including football, basketball and tennis.

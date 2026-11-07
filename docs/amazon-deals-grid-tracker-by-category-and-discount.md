@@ -8,6 +8,10 @@ A free n8n workflow that runs the [Amazon Deals Grid Tracker by Category & Disco
 - Actor: https://apify.com/dataspryva/amazon-deals-grid-tracker-by-category-and-discount
 - Agent skill for the same Actor: https://github.com/bolvein-firex/scraping-skills/blob/main/skills/amazon-deals-grid-tracker-by-category-and-discount/SKILL.md
 
+## Watch the Short
+
+- [Catch Amazon deals before Monday's price check](https://www.youtube.com/shorts/rbaQJ__OtNg)
+
 ## What it does
 
 Pull Amazon's Today's Deals grid across 23 marketplaces, with deal price, list price, savings amount/percent, deal type, brand, and department for each product. Filter by category, brand, price range, and discount range.
