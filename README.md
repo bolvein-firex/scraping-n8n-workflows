@@ -2,7 +2,7 @@
 
 A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 33 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**48 workflows** · 28 with a YouTube Short · last updated 2026-11-07 · MIT licence
+**49 workflows** · 28 with a YouTube Short · last updated 2026-11-07 · MIT licence
 
 ## Quick start
 
@@ -43,6 +43,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 |---|---|---|
 | Walk Score for a list of addresses | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` |
 | Zillow for-sale, rental and sold listings | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | `address`, `price`, `soldPrice`, `beds`, `baths` |
+| Zillow research county home value trend scraper | [Zillow Research County Home Value Trend Scraper](docs/zillow-research-county-home-value-trend-scraper.md) | `countyName`, `stateCode`, `stateName`, `metro`, `latestValue` |
 
 ### Travel and short-term rentals
 
@@ -156,6 +157,7 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 46 | [YouTube Caption & Whisper AI Transcript Extractor](docs/youtube-caption-and-whisper-ai-transcript-extractor.md) | YouTube | `video_id`, `title`, `channel_name`, `publishedAt`, `transcript_language` | [JSON](workflows/youtube-caption-and-whisper-ai-transcript-extractor.json) |  |
 | 47 | [YouTube Video Comment & Reply Thread Scraper](docs/youtube-video-comment-and-reply-thread-scraper.md) | YouTube | `authorName`, `text`, `likeCount`, `replyCount`, `isHearted` | [JSON](workflows/youtube-video-comment-and-reply-thread-scraper.json) |  |
 | 48 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 49 | [Zillow Research County Home Value Trend Scraper](docs/zillow-research-county-home-value-trend-scraper.md) | Zillow | `countyName`, `stateCode`, `stateName`, `metro`, `latestValue` | [JSON](workflows/zillow-research-county-home-value-trend-scraper.json) |  |
 
 ## FAQ
 
