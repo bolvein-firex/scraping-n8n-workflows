@@ -1,8 +1,8 @@
 # Scraping n8n Workflows
 
-A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 31 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
+A collection of free, runnable n8n workflows that pull public web data from Google Maps, Amazon, Shopify, Zillow, Airbnb, Indeed, TikTok, Reddit and 32 more sources through Apify Actors, then clean, dedupe and send the rows to Google Sheets or the next node.
 
-**46 workflows** · 23 with a YouTube Short · last updated 2026-11-07 · MIT licence
+**47 workflows** · 23 with a YouTube Short · last updated 2026-11-07 · MIT licence
 
 ## Quick start
 
@@ -22,6 +22,7 @@ A collection of free, runnable n8n workflows that pull public web data from Goog
 | Google Maps leads with emails | [Google Maps Business Lead & Email Finder](docs/google-maps-business-lead-and-email-finder.md) | `name`, `googleBusinessCategories`, `phoneNumber`, `email`, `reviewScore` |
 | Google Maps search beyond 120 results | [Google Maps Grid-Based Market Saturation Scanner](docs/google-maps-grid-based-market-saturation-scanner.md) | `name`, `categoryName`, `totalScore`, `reviewsCount`, `phone` |
 | New Jersey business entity search | [New Jersey Business Registry Lookup & Name Checker](docs/new-jersey-business-registry-lookup-and-name-checker.md) | `businessName`, `entityTypeAbbr`, `entityTypeFull`, `city`, `incorporatedDate` |
+| Threads public post, reply scraper | [Threads Public Post, Reply & Profile Data Extractor](docs/threads-public-post-reply-and-profile-data-extractor.md) | `authorUsername`, `postText`, `likeCount`, `commentCount`, `shareCount` |
 | Find emails and phone numbers from a list of websites | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` |
 
 ### E-commerce and price tracking
@@ -141,17 +142,18 @@ Output fields are the Actor's own column names, read from its dataset schema at 
 | 33 | [SofaScore Live Scores, Standings & Team Search Data](docs/sofascore-live-scores-standings-and-team-search-data.md) | SofaScore | `name`, `homeTeam`, `awayTeam`, `homeScore`, `awayScore` | [JSON](workflows/sofascore-live-scores-standings-and-team-search-data.json) |  |
 | 34 | [startup.jobs Category & Keyword Job Scraper](docs/startup-jobs-category-and-keyword-job-scraper.md) | startup.jobs | `title`, `company`, `location`, `salary`, `postedAt` | [JSON](workflows/startup-jobs-category-and-keyword-job-scraper.json) | [Watch](https://www.youtube.com/shorts/SOMB7J9-Iak) |
 | 35 | [Steam Game Reviews & Playtime Extractor](docs/steam-game-reviews-and-playtime-extractor.md) | Steam | `gameTitle`, `rating`, `reviewText`, `authorName`, `authorPlaytimeForever` | [JSON](workflows/steam-game-reviews-and-playtime-extractor.json) |  |
-| 36 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
-| 37 | [TikTok Keyword Search & Discovery Scraper](docs/tiktok-keyword-search-and-discovery-scraper.md) | TikTok | `rank`, `caption`, `playCount`, `likeCount`, `commentCount` | [JSON](workflows/tiktok-keyword-search-and-discovery-scraper.json) |  |
-| 38 | [TikTok Verified Mention Tracker](docs/tiktok-verified-mention-tracker.md) | TikTok | `targetUsername`, `postUrl`, `author.followerCount`, `playCount`, `likeCount` | [JSON](workflows/tiktok-verified-mention-tracker.json) |  |
-| 39 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
-| 40 | [Washington Trails Association Hike & Trip Report Finder](docs/washington-trails-association-hike-and-trip-report-finder.md) | Washington Trails Association | `trailName`, `region`, `lengthMiles`, `rating`, `reviewCount` | [JSON](workflows/washington-trails-association-hike-and-trip-report-finder.json) |  |
-| 41 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) | [Watch](https://www.youtube.com/shorts/aJWSYR7WvXE) |
-| 42 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
-| 43 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) | [Watch](https://www.youtube.com/shorts/cP29fxKOpvM) |
-| 44 | [YouTube Caption & Whisper AI Transcript Extractor](docs/youtube-caption-and-whisper-ai-transcript-extractor.md) | YouTube | `video_id`, `title`, `channel_name`, `publishedAt`, `transcript_language` | [JSON](workflows/youtube-caption-and-whisper-ai-transcript-extractor.json) |  |
-| 45 | [YouTube Video Comment & Reply Thread Scraper](docs/youtube-video-comment-and-reply-thread-scraper.md) | YouTube | `authorName`, `text`, `likeCount`, `replyCount`, `isHearted` | [JSON](workflows/youtube-video-comment-and-reply-thread-scraper.json) |  |
-| 46 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
+| 36 | [Threads Public Post, Reply & Profile Data Extractor](docs/threads-public-post-reply-and-profile-data-extractor.md) | Threads | `authorUsername`, `postText`, `likeCount`, `commentCount`, `shareCount` | [JSON](workflows/threads-public-post-reply-and-profile-data-extractor.json) |  |
+| 37 | [TikTok Hashtag Momentum & Top Creator Tracker](docs/tiktok-hashtag-momentum-and-top-creator-tracker.md) | TikTok | `rankIndex`, `hashtagName`, `publishCnt`, `vv` | [JSON](workflows/tiktok-hashtag-momentum-and-top-creator-tracker.json) | [Watch](https://www.youtube.com/shorts/C3buLaYtlGg) |
+| 38 | [TikTok Keyword Search & Discovery Scraper](docs/tiktok-keyword-search-and-discovery-scraper.md) | TikTok | `rank`, `caption`, `playCount`, `likeCount`, `commentCount` | [JSON](workflows/tiktok-keyword-search-and-discovery-scraper.json) |  |
+| 39 | [TikTok Verified Mention Tracker](docs/tiktok-verified-mention-tracker.md) | TikTok | `targetUsername`, `postUrl`, `author.followerCount`, `playCount`, `likeCount` | [JSON](workflows/tiktok-verified-mention-tracker.json) |  |
+| 40 | [US Walkability, Transit & Bike Score Extractor](docs/us-walkability-transit-and-bike-score-extractor.md) | Walk Score | `address`, `city`, `walkScore`, `transitScore`, `bikeScore` | [JSON](workflows/us-walkability-transit-and-bike-score-extractor.json) | [Watch](https://www.youtube.com/shorts/yCT9c3LRopU) |
+| 41 | [Washington Trails Association Hike & Trip Report Finder](docs/washington-trails-association-hike-and-trip-report-finder.md) | Washington Trails Association | `trailName`, `region`, `lengthMiles`, `rating`, `reviewCount` | [JSON](workflows/washington-trails-association-hike-and-trip-report-finder.json) |  |
+| 42 | [We Work Remotely Job Listings & Salary Extractor](docs/we-work-remotely-job-listings-and-salary-extractor.md) | We Work Remotely | `title`, `company`, `category`, `salary`, `postedAt` | [JSON](workflows/we-work-remotely-job-listings-and-salary-extractor.json) | [Watch](https://www.youtube.com/shorts/aJWSYR7WvXE) |
+| 43 | [Website Contact Page Email & Phone Crawler](docs/website-contact-page-email-and-phone-crawler.md) | Any website | `websiteUrl`, `status`, `emails`, `primaryEmail`, `phones` | [JSON](workflows/website-contact-page-email-and-phone-crawler.json) | [Watch](https://www.youtube.com/shorts/MHdeuiVwMZA) |
+| 44 | [Workday Careers Site Job Listings Extractor](docs/workday-careers-site-job-listings-extractor.md) | Workday | `title`, `tenant`, `location`, `postedOn` | [JSON](workflows/workday-careers-site-job-listings-extractor.json) | [Watch](https://www.youtube.com/shorts/cP29fxKOpvM) |
+| 45 | [YouTube Caption & Whisper AI Transcript Extractor](docs/youtube-caption-and-whisper-ai-transcript-extractor.md) | YouTube | `video_id`, `title`, `channel_name`, `publishedAt`, `transcript_language` | [JSON](workflows/youtube-caption-and-whisper-ai-transcript-extractor.json) |  |
+| 46 | [YouTube Video Comment & Reply Thread Scraper](docs/youtube-video-comment-and-reply-thread-scraper.md) | YouTube | `authorName`, `text`, `likeCount`, `replyCount`, `isHearted` | [JSON](workflows/youtube-video-comment-and-reply-thread-scraper.json) |  |
+| 47 | [Zillow For-Sale, Rent & Sold Listing Extractor](docs/zillow-for-sale-rent-and-sold-listing-extractor.md) | Zillow | `address`, `price`, `soldPrice`, `beds`, `baths` | [JSON](workflows/zillow-for-sale-rent-and-sold-listing-extractor.json) | [Watch](https://www.youtube.com/shorts/bNjKOMdRlSY) |
 
 ## FAQ
 
