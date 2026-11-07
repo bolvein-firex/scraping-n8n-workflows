@@ -1,0 +1,202 @@
+{
+  "name": "Steam Game Reviews & Playtime Extractor - clean export",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "d67f1511-2d37-4448-a3a3-8107d6b8d328",
+      "name": "Daily trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Edit this object for your run. The Actor's full input schema is linked in the sticky note.\nconst input = {\n  \"startUrls\": [\n    {\n      \"url\": \"https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/\"\n    }\n  ],\n  \"maxReviews\": 25,\n  \"mode\": \"reviews\"\n};\n\nreturn [{ json: input }];"
+      },
+      "id": "ab89e49f-a547-4c18-a1ba-981928981560",
+      "name": "Configure input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "notes": "Edit the input object for your city, keyword, URLs or limit."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/dataspryva~steam-game-reviews-and-playtime-extractor/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "b6961bd4-e7eb-4785-a0fc-29067ff0f259",
+      "name": "Run Apify Actor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "notes": "Select the Apify API Token (Query Auth) credential."
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().flatMap((item) => (Array.isArray(item.json) ? item.json : [item.json]));\nconst failed = rows.find((row) => row && row.error && typeof row.error === 'object' && Object.keys(row).length === 1);\nif (failed) throw new Error(`Apify: ${failed.error.type || 'error'} ${failed.error.message || ''}`.trim());\nconst keyField = null; // no stable id in this output: identical rows are dropped\nconst kindField = rows.some((row) => row && row.recordType !== undefined) ? 'recordType' : null;\nconst scrapedAt = new Date().toISOString();\nconst seen = new Set();\nconst clean = [];\nfor (const row of rows) {\n  if (!row || typeof row !== 'object') continue;\n  const out = {};\n  for (const [k, v] of Object.entries(row)) {\n    if (v === null || v === undefined) continue;\n    out[k] = typeof v === 'string' ? v.trim() : v;\n  }\n  const value = keyField ? out[keyField] : undefined;\n  const id = (kindField ? `${out[kindField]}|` : '') + (value === undefined || value === '' ? JSON.stringify(out) : String(value).toLowerCase());\n  if (seen.has(id)) continue;\n  seen.add(id);\n  out._source = \"https://apify.com/dataspryva/steam-game-reviews-and-playtime-extractor\";\n  out._scrapedAt = scrapedAt;\n  clean.push(out);\n}\nreturn clean.map((json) => ({ json }));"
+      },
+      "id": "486e11cd-184b-4549-ad77-fc8c2e064ef1",
+      "name": "Normalize + dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "c0ec7f2b-f86c-41d6-a118-aa7f8238f4ba",
+      "name": "Rows ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Rows",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "a91804c2-5159-4a5c-a7a5-4b7bcb51827e",
+      "name": "Google Sheets (optional)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable this after adding your Google Sheets credential and sheet ID."
+    },
+    {
+      "parameters": {
+        "content": "## Steam Game Reviews & Playtime Extractor\n\n**Actor:** [Steam Game Reviews & Playtime Extractor](https://apify.com/dataspryva/steam-game-reviews-and-playtime-extractor)\n\n**Docs:** https://github.com/bolvein-firex/scraping-n8n-workflows/blob/main/docs/steam-game-reviews-and-playtime-extractor.md\n\n### Setup\n1. Create an Apify account and copy an API token.\n2. In n8n, create a **Query Auth** credential:\n   - Name: `Apify API Token`\n   - Query parameter name: `token`\n   - Value: your Apify token\n3. Open **Run Apify Actor** and select that credential.\n4. Click **Execute workflow**. The rows appear in **Rows ready**.\n5. Optional: enable **Google Sheets** and set your document and sheet.\n\n### Notes\n- This calls the public Actor endpoint. No API token is stored in this file.\n- `run-sync-get-dataset-items` waits up to 300 seconds. For large runs, switch to the async run + dataset endpoint.\n- Public data only. Respect the target site's terms and local law.\n\n### Input fields\n- `mode` (string, required)\n- `appIds` (array)\n- `startUrls` (array)\n- `gameNames` (array)\n- `maxReviews` (integer)\n- `maxGames` (integer)\n- `reviewType` (string)\n- `language` (string)\n- `sortBy` (string)\n- `helpfulWithinDays` (integer)\n- `purchaseType` (string)\n- `minPlaytimeHours` (integer)\n\n### Output fields\n- `gameTitle` (Game)\n- `rating` (Rating)\n- `reviewText` (Review)\n- `authorName` (Author)\n- `authorSteamId` (Author ID)\n- `authorPlaytimeForever` (Playtime (hrs))\n- `votesHelpful` (Helpful Votes)\n- `timestampCreated` (Date)\n- `language` (Language)\n- `steamPurchase` (Steam Purchase)\n- `primarilySteamDeck` (Steam Deck)",
+        "height": 640,
+        "width": 560,
+        "color": 4
+      },
+      "id": "0f70b8ca-de72-4990-a472-d05f1f374e3d",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -700
+      ]
+    }
+  ],
+  "connections": {
+    "Daily trigger": {
+      "main": [
+        [
+          {
+            "node": "Configure input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure input": {
+      "main": [
+        [
+          {
+            "node": "Run Apify Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Apify Actor": {
+      "main": [
+        [
+          {
+            "node": "Normalize + dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + dedupe": {
+      "main": [
+        [
+          {
+            "node": "Rows ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows ready": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [],
+  "versionId": "a355dbc8-4706-444f-aa06-f79b514b7099",
+  "description": "Steam game reviews scraper: runs the Steam Game Reviews & Playtime Extractor Apify Actor, returns gameTitle, rating, reviewText, authorName, authorPlaytimeForever and more, then normalizes and dedupes the rows before an optional Google Sheets append."
+}
